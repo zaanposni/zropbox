@@ -15,6 +15,8 @@
     fallbackLocale: "en",
     initialLocale: getLocaleFromNavigator(),
   });
+
+  // loggedInUser.set({} as any);
 </script>
 
 <style global lang="postcss">
