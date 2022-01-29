@@ -1,0 +1,33 @@
+@use 'sass:color';
+
+@use '@material/theme/color-palette';
+
+// Svelte Colors!
+@use '@material/theme/index' as theme with (
+  $primary: #BB86FC,
+  $secondary: #03DAC6,
+  $on-primary: #FFFFFF,
+  $on-secondary: #FFFFFF,
+  $background: #303030,
+  $surface: #424242,
+  $error: #CF6679
+);
+
+html,
+body {
+  background-color: theme.$background;
+  color: theme.$on-primary;
+}
+
+a {
+  color: #379683;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: color.scale(#379683, $lightness: -35%);
+}

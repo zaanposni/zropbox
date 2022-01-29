@@ -1,0 +1,9 @@
+version: '2.2'
+
+services:
+  nginx:
+    container_name: cdn_nginx
+    image: ghcr.io/zaanposni/cdn:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5570:80"
