@@ -47,7 +47,7 @@
         <Icon class="material-icons">search</Icon>
         <Input bind:value on:keydown={handleKeyDown} placeholder="Quicksearch" class="quicksearch-input" />
     </Paper>
-    <Fab on:click={doSearch} disabled={value?.trim() === ''} exited={value?.trim() === ''} color=primary mini class="quicksearch-fab mr-3">
+    <Fab on:click={doSearch} disabled={value?.trim() === ''} color=primary mini class="quicksearch-fab mr-3">
         <Icon class="material-icons">arrow_forward</Icon>
     </Fab>
 </div>

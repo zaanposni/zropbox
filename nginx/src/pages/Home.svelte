@@ -1,5 +1,6 @@
 <script lang="ts">
-  import Hierarchy from "../components/Hierarchy.svelte";
+  import Explorer from "../components/Explorer.svelte";
+import Hierarchy from "../components/Hierarchy.svelte";
   import Quicksearch from "../components/Quicksearch.svelte";
   import { fillDummyData } from "../stores/directory";
 
@@ -19,11 +20,14 @@
     </div>
 
     <!-- Hierarchy -->
-    <div class="card-container">
+    <div class="card-container mb-4">
       <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}} />
     </div>
 
     <!-- TODO: Explorer -->
+    <div class="card-container">
+      <Explorer />
+    </div>
 
     <!-- TODO: Footer -->
   </div>

@@ -1,13 +1,14 @@
 export interface IDirectoryEntry {
     id: number;
     name: string;
-    isDirectory: boolean;
+    isDir: boolean;
     isFile: boolean;
     isRoot: boolean;
-    tempLink: string;
-    tempLinkUntil: Date;
+    tempLink?: string;
+    tempLinkUntil?: Date;
     size: number;
     uploadedAt: Date;
     uploadedBy: string;
     isPublic: boolean;
+    loading?: boolean;
 }

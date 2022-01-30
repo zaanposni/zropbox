@@ -28,13 +28,13 @@
         {#if $currentDirectory?.hierarchy}
             <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
             <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
-            <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
+              <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
             </div>
             <span class="font-light px-1">/</span>
             {#each $currentDirectory?.hierarchy as directory}
             {#if !directory.isRoot}
                 <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", directory.id); }}>
-                <div class="px-2 py-1">{directory.name}</div>
+                  <div class="px-2 py-1">{directory.name}</div>
                 </div>
                 <span class="font-light px-1">/</span>
             {/if}
@@ -42,7 +42,7 @@
         {:else}
             <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
                 <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
-                <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
+                  <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
                 </div>
             <span class="font-light px-1">/</span>
         {/if}
