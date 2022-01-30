@@ -1,5 +1,9 @@
 version: '2.2'
 
+volumes:
+  mysql:
+  filehost:
+
 services:
   db:
     container_name: cdn_db
@@ -24,8 +28,9 @@ services:
       - appnetwork
 
   backend:
+    build:
+      context: backend
     container_name: cdn_backend
-    image: ghcr.io/zaanposni/cdn_backend:latest
     depends_on:
         db:
           condition: service_healthy
@@ -38,16 +43,25 @@ services:
       - MYSQL_HOST=db
       - META_SERVICE_BASE_URL=${META_SERVICE_BASE_URL}
       - ABSOLUTE_PATH_TO_FILE_UPLOAD=/filehost/
+      - ASPNETCORE_ENVIRONMENT=Development
     networks:
       - appnetwork
     volumes:
       - filehost:/filehost
 
   nginx:
+    build:
+      context: nginx
     container_name: cdn_nginx
-    image: ghcr.io/zaanposni/cdn_nginx:latest
     restart: unless-stopped
+    depends_on:
+        - db
+        - backend
     ports:
       - "127.0.0.1:5620:80"
     networks:
     - appnetwork
+
+networks:
+  appnetwork:
+    driver: bridge

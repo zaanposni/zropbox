@@ -77,10 +77,7 @@
                             <!-- Action buttons -->
                             <div class="flex flex-row shrink-0">
                                 <IconButton class="material-icons invisible">share</IconButton>
-                                <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => { console.log("restrict", item.id, item.isPublic); }}>
-                                    <Icon class="material-icons" on>lock_open</Icon>
-                                    <Icon class="material-icons">lock</Icon>
-                                </IconButton>
+                                <IconButton class="material-icons invisible">share</IconButton>
                                 <IconButton class="material-icons px-0" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
                             </div>
                         </div>
