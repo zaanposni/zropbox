@@ -4,7 +4,8 @@
   import { Icon } from "@smui/icon-button";
   import Textfield from "@smui/textfield";
   import LinearProgress from '@smui/linear-progress';
-import { loggedInUser } from "../stores/authStore";
+  import { loggedInUser } from "../stores/authStore";
+  import { _ } from "svelte-i18n";
 
   let username: string = "";
   let password: string = "";
@@ -29,24 +30,27 @@ import { loggedInUser } from "../stores/authStore";
     <Card>
       <Content class="flex flex-col justify-end p-8">
         <div class="text-5xl font-medium leading-tight text-center">
-            LOGIN
+            {$_('Login.Title')}
         </div>
         <div class="p-8">
           <div class="p-2">
-            <Textfield bind:value={username} label="Username" required type="text" bind:invalid={invalidUsername} updateInvalid>
+            <Textfield bind:value={username} label="{$_('Login.Username')}" required type="text" bind:invalid={invalidUsername} updateInvalid>
               <Icon class="material-icons mr-2" slot="leadingIcon">person</Icon>
             </Textfield>
           </div>
           <div class="p-2">
-            <Textfield bind:value={password} label="Password" required type="password" bind:invalid={invalidPassword} updateInvalid>
+            <Textfield bind:value={password} label="{$_('Login.Password')}" required type="password" bind:invalid={invalidPassword} updateInvalid>
               <Icon class="material-icons mr-2" slot="leadingIcon">lock</Icon>
             </Textfield>
           </div>
         </div>
+        <div class="text-sm font-medium leading-tight text-center">
+            {$_('Login.Guidelines')}
+        </div>
       </Content>
       <Actions class="flex justify-end">
         <Button {disabled} type="submit" on:click={login}>
-          <i class="material-icons" aria-hidden="true">arrow_forward</i>LOGIN
+          <i class="material-icons" aria-hidden="true">arrow_forward</i>{$_('Login.LoginButton')}
         </Button>
       </Actions>
       <LinearProgress indeterminate closed={! loggingInProgress}/>

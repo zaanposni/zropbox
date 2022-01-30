@@ -31,3 +31,19 @@ a:hover {
 a:visited {
   color: color.scale(#379683, $lightness: -35%);
 }
+
+.primary {
+  color: theme.$primary;
+}
+
+.secondary {
+  color: theme.$secondary;
+}
+
+.error {
+  color: theme.$error;
+}
+
+.bg-on-hover:hover {
+  background-color: theme.$background;
+}
