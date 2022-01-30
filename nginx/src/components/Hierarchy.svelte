@@ -6,10 +6,14 @@
   import { currentDirectory } from "../stores/directory";
   import Menu, { MenuComponentDev } from '@smui/menu';
   import List, { Item, Text, Graphic } from '@smui/list';
+  import type { IHierarchy } from "../models/IHierarchyEntry";
 
   let addMenu: MenuComponentDev;
+  let completePath: string = "";
+  let lastThreeHierarchyElements: IHierarchy[] = [];
 
-  let newDirName: string = "";
+  $: completePath = "Complete path: " + $loggedInUser.name + "/" + $currentDirectory?.hierarchy?.filter(x => !x.isRoot)?.map(h => h.name).join("/") ?? "";
+  $: lastThreeHierarchyElements = $currentDirectory?.hierarchy?.slice(1).slice(-3) ?? [];
 
   const eventDispatcher = createEventDispatcher();
 
@@ -31,14 +35,27 @@
               <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
             </div>
             <span class="font-light px-1">/</span>
-            {#each $currentDirectory?.hierarchy as directory}
-            {#if !directory.isRoot}
-                <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", directory.id); }}>
-                  <div class="px-2 py-1">{directory.name}</div>
-                </div>
-                <span class="font-light px-1">/</span>
+            {#if $currentDirectory?.hierarchy?.length < 3}
+              {#each $currentDirectory?.hierarchy as directory}
+                {#if !directory.isRoot}
+                    <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", directory.id); }}>
+                      <div class="px-2 py-1">{directory.name}</div>
+                    </div>
+                    <span class="font-light px-1">/</span>
+                {/if}
+              {/each}
+            {:else}
+              <div class="px-2 py-1" title="{completePath}">...</div>
+              <span class="font-light px-1">/</span>
+              {#each lastThreeHierarchyElements as directory}
+                {#if !directory.isRoot}
+                    <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", directory.id); }}>
+                      <div class="px-2 py-1">{directory.name}</div>
+                    </div>
+                    <span class="font-light px-1">/</span>
+                {/if}
+              {/each}
             {/if}
-            {/each}
         {:else}
             <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
                 <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>

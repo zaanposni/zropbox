@@ -24,6 +24,42 @@ export function fillDummyData() {
           name: "Homedawd dawd",
           isRoot: false,
           parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
+        },
+        {
+          id: 3,
+          name: "Homedawd dawd",
+          isRoot: false,
+          parentId: 2,
         }
       ],
       items: [
@@ -42,7 +78,7 @@ export function fillDummyData() {
         },
         {
           id: 16,
-          name: "test_dawdadawdawd-awd-a-daw-d-ad-aw-dawdawjbdhujiawbdujoawbdoiawbdioawbdoujawbdoujawbdoawbda.txt",
+          name: "test_dawdadawdawd -awd-a-daw-d-ad-a.txt",
           isDir: false,
           isFile: true,
           isRoot: false,
@@ -68,7 +104,7 @@ export function fillDummyData() {
         },
         {
           id: 18,
-          name: "wdawdda idhjoaw indoiawn doiawn dionawo idnawoiddaw dad awd awd awd awd awd awd awd awd awd aw noaiwdn aiownd ioawkndoaw jkndoak ndoia",
+          name: "wdawdda idhjoaw indoiawn doiawn wwwwwww",
           isDir: true,
           isFile: false,
           isRoot: false,
