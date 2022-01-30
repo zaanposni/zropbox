@@ -24,9 +24,9 @@ import Hierarchy from "../components/Hierarchy.svelte";
       <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}} />
     </div>
 
-    <!-- TODO: Explorer -->
+    <!-- Explorer -->
     <div class="card-container">
-      <Explorer />
+      <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} />
     </div>
 
     <!-- TODO: Footer -->

@@ -6,6 +6,13 @@
     import LinearProgress from '@smui/linear-progress';
     import DateDisplay from "./DateDisplay.svelte";
     import filesize from "filesize";
+    import { createEventDispatcher } from "svelte";
+
+    const eventDispatcher = createEventDispatcher();
+
+    function viewItem(id: number) {
+        console.log("view", id);
+    }
 
     function getIconBasedOnName(name: string): string {
         const type = name.split(".").pop();
@@ -53,48 +60,53 @@
                 {#if item.isDir}
                     <div class="flex flex-row items-center">
                         <!-- Icon -->
-                        <IconButton class="material-icons shrink-0">folder</IconButton>
-                        <!-- Name -->
-                        <div class="truncate" title="Foldername: {item.name}">
-                            {item.name}
-                        </div>
-                        <div class="grow" />
-                        <!-- Metadata -->
-                        <div class="flex flex-row shrink-0">
-                            <div title="filesize" class="greyed-text mr-2">{filesize(item.size)}</div>
-                            <DateDisplay title="uploaded at" class="greyed-text" date={item.uploadedAt} />
+                        <IconButton class="material-icons shrink-0" on:click={() => { eventDispatcher("changeDir", item.id); }}>folder</IconButton>
+                        <div class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
+                             on:click={() => { eventDispatcher("changeDir", item.id); }} title="Foldername: {item.name}">
+                            <!-- Name -->
+                            <div class="truncate">
+                                {item.name}
+                            </div>
+                            <div class="grow" />
+                            <!-- Metadata -->
+                            <div title="filesize" class="shrink-0 greyed-text mr-2">{filesize(item.size)}</div>
+                            <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
                         </div>
                         <!-- Action buttons -->
                         <div class="flex flex-row shrink-0">
-                            <IconButton class="material-icons invisible">lock</IconButton>
                             <IconButton class="material-icons invisible">share</IconButton>
-                            <IconButton class="material-icons" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
+                            <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => { console.log("restrict", item.id, item.isPublic); }}>
+                                <Icon class="material-icons" on>lock_open</Icon>
+                                <Icon class="material-icons">lock</Icon>
+                            </IconButton>
+                            <IconButton class="material-icons px-0" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
                         </div>
                     </div>
                 {/if}
             {/each}
             {#each $currentDirectory?.items as item}
                 {#if item.isFile}
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-center grow-0">
                         <!-- Icon -->
-                        <IconButton class="material-icons shrink-0">{getIconBasedOnName(item.name)}</IconButton>
-                        <!-- Name -->
-                        <div class="truncate" title="Filename: {item.name}">
-                            {item.name}
-                        </div>
-                        <div class="grow" />
-                        <!-- Metadata -->
-                        <div class="flex flex-row shrink-0">
-                            <div title="filesize" class="greyed-text mr-2">{filesize(item.size)}</div>
-                            <DateDisplay title="uploaded at" class="greyed-text" date={item.uploadedAt} />
+                        <IconButton class="material-icons shrink-0" on:click={() => { viewItem(item.id); }}>{getIconBasedOnName(item.name)}</IconButton>
+                        <div class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
+                             on:click={() => { viewItem(item.id); }} title="Filename: {item.name}">
+                            <!-- Name -->
+                            <div class="truncate">
+                                {item.name}
+                            </div>
+                            <div class="grow" />
+                            <!-- Metadata -->
+                            <div title="filesize" class="shrink-0 greyed-text mr-2">{filesize(item.size)}</div>
+                            <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
                         </div>
                         <!-- Action buttons -->
                         <div class="flex flex-row shrink-0">
+                            <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }}>share</IconButton>
                             <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => { console.log("restrict", item.id, item.isPublic); }}>
                                 <Icon class="material-icons" on>lock_open</Icon>
                                 <Icon class="material-icons">lock</Icon>
                             </IconButton>
-                            <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }}>share</IconButton>
                             <IconButton class="material-icons px-0" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
                         </div>
                     </div>
