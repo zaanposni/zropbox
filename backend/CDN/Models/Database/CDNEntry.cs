@@ -11,6 +11,8 @@ namespace CDN.Models
         public DateTime UploadedAt { get; set; }
         [ForeignKey("UserId")]
         public User UploadedBy { get; set; }
+        [ForeignKey("ParentId")]
+        public CDNEntry Parent { get; set; }
         public bool IsPublic { get; set; }
         public CDNTempEntry CDNTempEntry { get; set; }
     }
