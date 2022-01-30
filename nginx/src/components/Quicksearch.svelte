@@ -6,7 +6,7 @@
     let value = '';
 
     function doSearch() {
-      alert('Search for ' + value);
+      console.log("do search", value);
     }
 
     function handleKeyDown(event: CustomEvent | KeyboardEvent) {
@@ -43,22 +43,11 @@
 </style>
 
 <div class="quicksearch-container w-100">
-    <Paper class="quicksearch-paper grow mr-6" elevation={6}>
+    <Paper class="quicksearch-paper grow mr-3" elevation={6}>
         <Icon class="material-icons">search</Icon>
-        <Input
-        bind:value
-        on:keydown={handleKeyDown}
-        placeholder="Quicksearch"
-        class="quicksearch-input"
-        />
+        <Input bind:value on:keydown={handleKeyDown} placeholder="Quicksearch" class="quicksearch-input" />
     </Paper>
-    <Fab
-        on:click={doSearch}
-        disabled={value === ''}
-        color="primary"
-        mini
-        class="quicksearch-fab">
+    <Fab on:click={doSearch} disabled={value?.trim() === ''} exited={value?.trim() === ''} color=primary mini class="quicksearch-fab mr-3">
         <Icon class="material-icons">arrow_forward</Icon>
     </Fab>
 </div>
-<pre class="status">Value: {value}</pre>

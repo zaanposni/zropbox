@@ -14,7 +14,7 @@
 <div class="flex flex-col grow items-center w-full h-full">
   <div class="w-3/5">
     <!-- Search box -->
-    <div class="card-container">
+    <div class="card-container mb-4">
       <Quicksearch />
     </div>
 
