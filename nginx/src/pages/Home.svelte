@@ -1,5 +1,6 @@
 <script lang="ts">
   import Hierarchy from "../components/Hierarchy.svelte";
+  import Quicksearch from "../components/Quicksearch.svelte";
   import { fillDummyData } from "../stores/directory";
 
   fillDummyData();
@@ -12,7 +13,10 @@
 
 <div class="flex flex-col grow items-center w-full h-full">
   <div class="w-3/5">
-    <!-- TODO: Search box -->
+    <!-- Search box -->
+    <div class="card-container">
+      <Quicksearch />
+    </div>
 
     <!-- Hierarchy -->
     <div class="card-container">
