@@ -30,7 +30,7 @@ namespace CDN.Middlewares
 
                 if (string.IsNullOrEmpty(ip))
                 {
-                    return context.Connection.RemoteIpAddress.ToString();
+                    return context.Connection.RemoteIpAddress?.ToString() ?? "-";
                 }
 
                 return ip;
@@ -44,7 +44,7 @@ namespace CDN.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            string method = context.Request?.Method;
+            string method = context.Request.Method;
             switch (method)
             {
                 case "DELETE":

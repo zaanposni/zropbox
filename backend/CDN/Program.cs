@@ -1,6 +1,8 @@
 using CDN.Data;
+using CDN.Exceptions;
 using CDN.Logger;
 using CDN.Middlewares;
+using CDN.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +28,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services
+    .AddSingleton<InternalConfiguration>();
+
+string jwtToken = Environment.GetEnvironmentVariable("JWT_KEY");
+if (jwtToken == null) throw new InvalidConfigurationException("JWT_KEY not found.");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -37,13 +45,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "cdn",
             ValidAudience = "cdn",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("cdnkey1237189273891273981273cdnkey1237189273891273981273cdnkey1237189273891273981273cdnkey1237189273891273981273"))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken))
         };
     });
 
 var app = builder.Build();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<APIExceptionHandlingMiddleware>();
+
+using (var scope = app.Services.CreateScope())
+{
+scope.ServiceProvider.GetRequiredService<DataContext>().Database.Migrate();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<InternalConfiguration>().Init();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

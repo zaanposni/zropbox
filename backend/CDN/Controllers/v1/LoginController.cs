@@ -21,8 +21,6 @@ namespace CDN.Controllers
             var currentUser = HttpContext.User;
             return new string[] { "value1", "value2", "value3", "value4", "value5",
                 currentUser.Identity.Name,
-                currentUser.Claims.FirstOrDefault(x => x.Type == "username").Value,
-                currentUser.Claims.FirstOrDefault(x => x.Type == "isadmin").Value,
             };
         }
 
@@ -43,15 +41,12 @@ namespace CDN.Controllers
 
         private string GenerateJSONWebToken()
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("cdnkey1237189273891273981273cdnkey1237189273891273981273cdnkey1237189273891273981273cdnkey1237189273891273981273"));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes());
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[] {
-                new Claim(JwtRegisteredClaimNames.Name, "zaanposni1"),
-                new Claim(JwtRegisteredClaimNames.NameId, "zaanposni2"),
-                new Claim(JwtRegisteredClaimNames.UniqueName, "zaanposni3"),
-                new Claim("username", "zaanposni"),
-                new Claim("isadmin", "true"),
+                new Claim(JwtRegisteredClaimNames.Name, "zaanposni"),
+                new Claim(JwtRegisteredClaimNames.UniqueName, "zaanposni"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
