@@ -6,6 +6,43 @@
     import LinearProgress from '@smui/linear-progress';
     import DateDisplay from "./DateDisplay.svelte";
     import filesize from "filesize";
+
+    function getIconBasedOnName(name: string): string {
+        const type = name.split(".").pop();
+        if (type === name) {
+            return "image";
+        }
+
+        switch (type) {
+            case "pdf":
+                return "picture_as_pdf";
+            case "doc":
+            case "docx":
+            case "txt":
+                return "description";
+            case "xls":
+            case "xlsx":
+                return "table_chart";
+            case "ppt":
+            case "pptx":
+                return "powerpoint";
+            case "zip":
+            case "rar":
+                return "folder_zip";
+            case "mp3":
+                return "library_music";
+            case "mp4":
+                return "video_library";
+            case "png":
+            case "jpg":
+            case "jpeg":
+                return "image";
+            case "gif":
+                return "gif";
+            default:
+                return "file";
+        }
+    }
 </script>
 
 <Card>
@@ -40,7 +77,7 @@
                 {#if item.isFile}
                     <div class="flex flex-row items-center">
                         <!-- Icon -->
-                        <IconButton class="material-icons shrink-0">image</IconButton>
+                        <IconButton class="material-icons shrink-0">{getIconBasedOnName(item.name)}</IconButton>
                         <!-- Name -->
                         <div class="truncate" title="Filename: {item.name}">
                             {item.name}
