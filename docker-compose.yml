@@ -38,6 +38,7 @@ services:
       - MYSQL_HOST=db
       - META_SERVICE_BASE_URL=${META_SERVICE_BASE_URL}
       - ABSOLUTE_PATH_TO_FILE_UPLOAD=/filehost/
+      - JWT_KEY=${JWT_KEY}
     networks:
       - appnetwork
     volumes:

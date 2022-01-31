@@ -8,9 +8,9 @@ namespace CDN.Repositories
 {
     public class UserRepository : BaseRepository<UserRepository>
     {
-        private UserRepository(ServiceProvider serviceProvider) : base(serviceProvider) { }
+        private UserRepository(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
-        public UserRepository CreateDefault(ServiceProvider serviceProvider)
+        public static UserRepository CreateDefault(IServiceProvider serviceProvider)
         {
             return new UserRepository(serviceProvider);
         }
@@ -52,7 +52,7 @@ namespace CDN.Repositories
 
             using var hmac = new HMACSHA512();
 
-            User createUser = new User()
+            User createUser = new()
             {
                 Name = username,
                 TokenSalt = hmac.Key,

@@ -5,13 +5,11 @@ namespace CDN.Services
 {
     public class InternalConfiguration
     {
-        private readonly ILogger<InternalConfiguration> _logger;
         private string _auditLogWebhookUrl;
         private string _jwtKey;
 
-        public InternalConfiguration(ILogger<InternalConfiguration> logger)
+        public InternalConfiguration()
         {
-            _logger = logger;
             _auditLogWebhookUrl = string.Empty;
             _jwtKey = string.Empty;
         }
@@ -29,6 +27,11 @@ namespace CDN.Services
         public string GetAuditLogWebhook()
         {
             return _auditLogWebhookUrl;
+        }
+
+        public string GetJwtKey()
+        {
+            return _jwtKey;
         }
     }
 }
