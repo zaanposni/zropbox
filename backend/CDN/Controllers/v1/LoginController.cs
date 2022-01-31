@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -21,26 +19,14 @@ namespace CDN.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
-            var currentUser = HttpContext.User;
-            return Ok(new string[] {
-                "value1",
-                currentUser.Identity.Name,
-                await GetCurrentUsername()
-            });
+            return Ok(new UserView(await GetCurrentUser()));
         }
 
-        [HttpGet("admin")]
         [Authorize]
-        public async Task<ActionResult> Admin()
-        {
-            await ValidateLogin(true);
-            return Ok();
-        }
-
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserLogin login)
         {
+            await ValidateLogin(true);
             return Ok(new UserView(await UserRepository.CreateDefault(ServiceProvider).RegisterUser(login.Username, login.Password, false)));
         }
 

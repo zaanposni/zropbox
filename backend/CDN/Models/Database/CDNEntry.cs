@@ -12,7 +12,7 @@ namespace CDN.Models
         [ForeignKey("UserId")]
         public User UploadedBy { get; set; }
         [ForeignKey("ParentId")]
-        public CDNEntry Parent { get; set; }
+        public CDNEntry? Parent { get; set; }
         public bool IsPublic { get; set; }
         public CDNTempEntry CDNTempEntry { get; set; }
     }

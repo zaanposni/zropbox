@@ -46,6 +46,11 @@ namespace CDN.Controllers
 
         public async Task<string> GetCurrentUsername()
         {
+            return (await GetCurrentUser()).Name;
+        }
+
+        public async Task<User> GetCurrentUser()
+        {
             if (HttpContext.User == null || HttpContext.User.Identity == null)
             {
                 throw new UnauthorizedException();
@@ -57,11 +62,13 @@ namespace CDN.Controllers
             try
             {
                 User user = await UserRepository.CreateDefault(ServiceProvider).GetUser(HttpContext.User.Identity.Name);
-                return user.Name;
-            } catch (Exception)
+                return user;
+            }
+            catch (Exception)
             {
                 throw new UnauthorizedException();
             }
+
         }
     }
 }
