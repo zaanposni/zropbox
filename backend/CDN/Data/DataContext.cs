@@ -9,6 +9,7 @@ namespace CDN.Data
 {
     public class DataContext : DbContext
     {
+        public DataContext() { }
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
@@ -18,6 +19,11 @@ namespace CDN.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("A FALLBACK CONNECTION STRING");
+            }
+
             if (string.Equals("true", Environment.GetEnvironmentVariable("ENABLE_SQL_LOGGING")))
             {
                 optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder =>

@@ -41,7 +41,7 @@ namespace CDN.Controllers
 
         private string GenerateJSONWebToken()
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes());
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(""));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[] {

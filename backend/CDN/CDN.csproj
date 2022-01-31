@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Logger\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
