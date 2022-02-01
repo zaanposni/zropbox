@@ -16,25 +16,28 @@ namespace CDN.Controllers.v1
 {
     [Route("api/files")]
     [ApiController]
-    [Authorize]
     public class FileController : SimpleController<FileController>
     {
         public FileController(IServiceProvider serviceProvider) : base(serviceProvider) { }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetFile([FromRoute] int id)
         {
-            await ValidateLogin();
-            User currentUser = await GetCurrentUser();
 
             CDNEntry entry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(id);
             if (entry.IsDir)
             {
-                return BadRequest();
+                throw new ResourceNotFoundException();
             }
-            if (entry.UploadedBy != currentUser && !currentUser.IsAdmin && !entry.IsPublic)
+            if (!entry.IsPublic)
             {
-                throw new UnauthorizedException();
+                await ValidateLogin();
+                User currentUser = await GetCurrentUser();
+                if (entry.UploadedBy != currentUser && !currentUser.IsAdmin)
+                {
+                    throw new UnauthorizedException();
+                }
             }
 
             FileServe fileInfo = await FileRepository.CreateDefault(ServiceProvider).GetFile(id);
@@ -46,6 +49,7 @@ namespace CDN.Controllers.v1
         }
 
         [HttpPost("{id}")]
+        [Authorize]
         public async Task<IActionResult> UploadedFile([FromRoute] int id, [FromForm] FileUpload file)
         {
             await ValidateLogin();
