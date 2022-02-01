@@ -6,7 +6,7 @@ volumes:
 
 services:
   db:
-    container_name: cdn_db
+    container_name: zropbox_db
     image: mysql:8.0
     volumes:
         - mysql:/var/lib/mysql
@@ -30,7 +30,7 @@ services:
   backend:
     build:
       context: backend
-    container_name: cdn_backend
+    container_name: zropbox_backend
     depends_on:
         db:
           condition: service_healthy
@@ -53,7 +53,7 @@ services:
   nginx:
     build:
       context: nginx
-    container_name: cdn_nginx
+    container_name: zropbox_nginx
     restart: unless-stopped
     depends_on:
         - db

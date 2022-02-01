@@ -2,7 +2,7 @@ version: '2.2'
 
 services:
   db:
-    container_name: cdn_db
+    container_name: zropbox_db
     image: mysql:8.0
     volumes:
         - mysql:/var/lib/mysql
@@ -24,8 +24,8 @@ services:
       - appnetwork
 
   backend:
-    container_name: cdn_backend
-    image: ghcr.io/zaanposni/cdn_backend:latest
+    container_name: zropbox_backend
+    image: ghcr.io/zaanposni/zropbox_backend:latest
     depends_on:
         db:
           condition: service_healthy
@@ -45,8 +45,8 @@ services:
       - filehost:/filehost
 
   nginx:
-    container_name: cdn_nginx
-    image: ghcr.io/zaanposni/cdn_nginx:latest
+    container_name: zropbox_nginx
+    image: ghcr.io/zaanposni/zropbox_nginx:latest
     restart: unless-stopped
     ports:
       - "127.0.0.1:5620:80"
