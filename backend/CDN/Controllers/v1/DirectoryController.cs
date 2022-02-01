@@ -28,24 +28,45 @@ namespace CDN.Controllers
 
             DirectoryRepository repo = DirectoryRepository.CreateDefault(ServiceProvider);
 
-            CDNEntry currentItem = await repo.GetEntry(id);
-
-            if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+            // Auth check
+            if (id != 0)
             {
-                throw new UnauthorizedException();
+                CDNEntry currentItem = await repo.GetEntry(id);
+                if (!currentItem.IsDir)
+                {
+                    return BadRequest();
+                }
+                if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+                {
+                    throw new UnauthorizedException();
+                }
             }
 
-            List<CDNEntry> items = await repo.GetItemsInDirectory(id);
+            // Sub items for directory
+            List<CDNEntry> items = new();
+            if (id == 0)
+            {
+                items = await repo.GetItemsInRootDirectory(currentUser.Id);
+            }
+            else
+            {
+                items = await repo.GetItemsInDirectory(id);
+            }
 
+            // Hierarchy
             List<CDNEntry> parents = new();
-            CDNEntry currentEntry = currentItem;
-            while (true)
+            if (id != 0)
             {
-                parents.Insert(0, currentEntry);
-                if (currentEntry.Parent == null) break;
-                currentEntry = await repo.GetEntry(currentEntry.Parent.Id);
+                CDNEntry currentEntry = await repo.GetEntry(id);
+                while (true)
+                {
+                    parents.Insert(0, currentEntry);
+                    if (currentEntry.Parent == null) break;
+                    currentEntry = await repo.GetEntry(currentEntry.Parent.Id);
+                }
             }
 
+            // Create view
             return Ok(new DirectoryView()
             {
                 CurrentItemId = id,
@@ -62,11 +83,14 @@ namespace CDN.Controllers
 
             DirectoryRepository repo = DirectoryRepository.CreateDefault(ServiceProvider);
 
-            CDNEntry currentItem = await repo.GetEntry(id);
-
-            if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+            if (id != 0)
             {
-                throw new UnauthorizedException();
+                CDNEntry currentItem = await repo.GetEntry(id);
+
+                if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+                {
+                    throw new UnauthorizedException();
+                }
             }
 
             CDNEntry newEntry = new()
