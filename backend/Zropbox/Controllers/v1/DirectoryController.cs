@@ -80,7 +80,10 @@ namespace Zropbox.Controllers
             if (id != 0)
             {
                 CDNEntry currentItem = await repo.GetEntry(id);
-
+                if (! currentItem.IsDir)
+                {
+                    return BadRequest();
+                }
                 if (currentUser != currentItem.UploadedBy && !currentUser.IsAdmin)
                 {
                     throw new UnauthorizedException();
