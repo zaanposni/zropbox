@@ -20,16 +20,7 @@ body {
 }
 
 a {
-  color: #379683;
   text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:visited {
-  color: color.scale(#379683, $lightness: -35%);
 }
 
 .primary {

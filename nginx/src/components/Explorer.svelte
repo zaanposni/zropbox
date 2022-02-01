@@ -71,7 +71,7 @@
                                 </div>
                                 <div class="grow" />
                                 <!-- Metadata -->
-                                <div title="filesize" class="shrink-0 greyed-text mr-2">{filesize(item.size)}</div>
+                                <div title="filesize" class="shrink-0 greyed-text mr-2">{ filesize(item.size) }</div>
                                 <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
                             </div>
                             <!-- Action buttons -->
@@ -88,18 +88,18 @@
                     {#if item.isFile}
                         <div class="flex flex-row items-center grow-0">
                             <!-- Icon -->
-                            <IconButton class="material-icons shrink-0" on:click={() => { viewItem(item.id); }}>{getIconBasedOnName(item.name)}</IconButton>
-                            <div class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
-                                on:click={() => { viewItem(item.id); }} title="Filename: {item.name}">
+                            <IconButton class="material-icons shrink-0" on:click={() => { viewItem(item.id); }}>{ getIconBasedOnName(item.name) }</IconButton>
+                            <a class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
+                                href="/api/file/{item.id}" target="_blank" title="Filename: {item.name}">
                                 <!-- Name -->
                                 <div class="truncate">
                                     {item.name}
                                 </div>
                                 <div class="grow" />
                                 <!-- Metadata -->
-                                <div title="filesize" class="shrink-0 greyed-text mr-2">{filesize(item.size)}</div>
+                                <div title="filesize" class="shrink-0 greyed-text mr-2">{ filesize(item.size) }</div>
                                 <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
-                            </div>
+                            </a>
                             <!-- Action buttons -->
                             <div class="flex flex-row shrink-0">
                                 <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }}>share</IconButton>

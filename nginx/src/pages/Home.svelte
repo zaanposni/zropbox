@@ -4,7 +4,7 @@
   import Quicksearch from "../components/Quicksearch.svelte";
   import { currentDirectory, fillDummyData } from "../stores/directory";
 
-  fillDummyData();
+  // fillDummyData();
 
   let explorerLoading: boolean = false;
 
