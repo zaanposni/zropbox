@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Zropbox.Repositories;
+using Zropbox.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,14 +50,47 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+if (string.Equals("true", Environment.GetEnvironmentVariable("ENABLE_CORS")))
+{
+    builder.Services.AddCors(o => o.AddPolicy("DevCors", builder =>
+    {
+        builder.WithOrigins("http://127.0.0.1:5000")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    }));
+}
+
 var app = builder.Build();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<APIExceptionHandlingMiddleware>();
 
+if (string.Equals("true", Environment.GetEnvironmentVariable("ENABLE_CORS")))
+{
+    Console.WriteLine("Activating CORS support");
+    app.UseCors("DevCors");
+}
+
 using (var scope = app.Services.CreateScope())
 {
-scope.ServiceProvider.GetRequiredService<DataContext>().Database.Migrate();
+    DataContext context = scope.ServiceProvider.GetRequiredService<DataContext>();
+    await context.Database.MigrateAsync();
+
+    await context.Database.OpenConnectionAsync();
+
+    User existingUser = await context.Users.AsQueryable().OrderBy(x => x.Id).FirstOrDefaultAsync();
+    if (existingUser == null)
+    {
+        Random random = new();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        string password = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+
+        await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser("admin", password, true);
+
+        Console.WriteLine($"No user found in database. Created 'admin' account with password '{password}'.");
+    }
+    await context.Database.CloseConnectionAsync();
 }
 
 using (var scope = app.Services.CreateScope())

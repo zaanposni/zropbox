@@ -45,6 +45,7 @@ services:
       - ABSOLUTE_PATH_TO_FILE_UPLOAD=/filehost/
       - ASPNETCORE_ENVIRONMENT=Development
       - JWT_KEY=${JWT_KEY}
+      - ENABLE_CORS=true
     networks:
       - appnetwork
     volumes:
