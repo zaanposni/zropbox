@@ -12,10 +12,6 @@
 
     export let loading: boolean = false;
 
-    function viewItem(id: number) {
-        console.log("view", id);
-    }
-
     function getIconBasedOnName(name: string): string {
         const type = name.split(".").pop();
         if (type === name) {
@@ -88,9 +84,11 @@
                     {#if item.isFile}
                         <div class="flex flex-row items-center grow-0">
                             <!-- Icon -->
-                            <IconButton class="material-icons shrink-0" on:click={() => { viewItem(item.id); }}>{ getIconBasedOnName(item.name) }</IconButton>
-                            <a class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
-                                href="/api/file/{item.id}" target="_blank" title="Filename: {item.name}">
+                            <a class="shrink-0" href="/api/files/{item.id}" target="_blank" title="Filename: {item.name}">
+                                <IconButton class="material-icons">{ getIconBasedOnName(item.name) }</IconButton>
+                            </a>
+                            <a class="flex flex-row grow bg-on-hover rounded-md px-2 py-1 mr-2"
+                                href="/api/files/{item.id}" target="_blank" title="Filename: {item.name}">
                                 <!-- Name -->
                                 <div class="truncate">
                                     {item.name}

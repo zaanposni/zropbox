@@ -6,16 +6,9 @@
 
   // fillDummyData();
 
-  let explorerLoading: boolean = false;
-
   function changeDirectory(id: number) {
-    // 0 is the users root directory
     console.log("change directory", id);
-    explorerLoading = true;
-    currentDirectory.update(x => {
-      x.content.items = [];
-      return x;
-    });
+    currentDirectory.get(`/directory/${id}`);
   }
 
   currentDirectory.get('/directory/0');
@@ -35,7 +28,7 @@
 
         <!-- Explorer -->
         <div class="card-container">
-            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={explorerLoading} />
+            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={$currentDirectory?.loading} />
         </div>
 
         <!-- TODO: Footer -->
