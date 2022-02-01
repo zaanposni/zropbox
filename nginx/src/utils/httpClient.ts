@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store'
 import { ENABLE_CORS, API_URL } from '../config/config';
 import type { IHttpClient } from '../models/IHttpClient'
-import type { ILoadingContent } from '../models/ILoadingContent';
+import getCookie from '../utils/getCookie';
 
 // returns a store with HTTP access functions for get, post, patch, delete
 // anytime an HTTP request is made, the store is updated and all subscribers are notified.
@@ -21,7 +21,7 @@ export default function<T>(initial): IHttpClient<T> {
     // define headers and body
     const headers = {
       "Content-type": "multipart/form-data",
-      "Authorization": `Bearer ${localStorage.getItem('token')}`
+      "Authorization": `Bearer ${getCookie('zropbox_access_token')}`
     };
     // execute fetch
     const credentials = ENABLE_CORS ? 'include' : 'same-origin';
@@ -66,7 +66,7 @@ export default function<T>(initial): IHttpClient<T> {
     // define headers and body
     const headers = {
       "Content-type": "application/json",
-      "Authorization": `Bearer ${localStorage.getItem('token')}`
+      "Authorization": `Bearer ${getCookie('zropbox_access_token')}`
     };
     const body = params ? JSON.stringify(params) : undefined;
 

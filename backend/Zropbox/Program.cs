@@ -63,6 +63,7 @@ if (string.Equals("true", Environment.GetEnvironmentVariable("ENABLE_CORS")))
 
 var app = builder.Build();
 
+app.UseMiddleware<HeaderMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<APIExceptionHandlingMiddleware>();
 
