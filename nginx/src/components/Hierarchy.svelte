@@ -30,7 +30,7 @@
   <Content class="flex flex-col p-2">
     <div class="flex flex-row items-center">
         {#if $currentDirectory?.content?.hierarchy}
-            <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
+            <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }} title="return to root">folder_open</IconButton>
             <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
                 <div class="primary font-medium px-2 py-1">{$loggedInUser?.content?.name}</div>
             </div>
@@ -53,7 +53,7 @@
               {/each}
             {/if}
         {:else}
-            <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
+            <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }} title="return to root">folder_open</IconButton>
                 <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
                     <div class="primary font-medium px-2 py-1">{$loggedInUser?.content?.name}</div>
                 </div>

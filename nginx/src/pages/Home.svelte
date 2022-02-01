@@ -7,7 +7,7 @@
     // fillDummyData();
 
     function changeDirectory(id: number) {
-        if (id === $currentDirectory?.content?.currentItemId) {
+        if (id === $currentDirectory?.content?.currentItemId || $currentDirectory?.loading === true) {
              return;
         }
         currentDirectory.get(`/directory/${id}`);
