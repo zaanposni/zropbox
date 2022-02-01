@@ -20,7 +20,7 @@ namespace Zropbox.Controllers
             ServiceProvider = serviceProvider;
         }
 
-        public async Task ValidateLogin(bool requireAdmin = false)
+        protected async Task ValidateLogin(bool requireAdmin = false)
         {
             if (HttpContext.User == null || HttpContext.User.Identity == null)
             {
@@ -44,12 +44,12 @@ namespace Zropbox.Controllers
             }
         }
 
-        public async Task<string> GetCurrentUsername()
+        protected async Task<string> GetCurrentUsername()
         {
             return (await GetCurrentUser()).Name;
         }
 
-        public async Task<User> GetCurrentUser()
+        protected async Task<User> GetCurrentUser()
         {
             if (HttpContext.User == null || HttpContext.User.Identity == null)
             {

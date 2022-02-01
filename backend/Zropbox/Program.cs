@@ -88,7 +88,11 @@ using (var scope = app.Services.CreateScope())
 
         await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser("admin", password, true);
 
+        Console.WriteLine($"==================================================================================");
+        Console.WriteLine();
         Console.WriteLine($"No user found in database. Created 'admin' account with password '{password}'.");
+        Console.WriteLine();
+        Console.WriteLine($"==================================================================================");
     }
     await context.Database.CloseConnectionAsync();
 }
