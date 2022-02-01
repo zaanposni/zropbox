@@ -31,6 +31,11 @@ namespace CDN.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CDNEntry>()
+                .HasOne(c => c.Parent)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CDNEntry>()
                 .HasOne(c => c.UploadedBy)
                 .WithMany(c => c.Entries)
                 .IsRequired()
