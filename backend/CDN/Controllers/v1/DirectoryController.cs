@@ -1,11 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using CDN.Models;
 using CDN.Repositories;
 using CDN.Models.DTO;
@@ -36,7 +30,7 @@ namespace CDN.Controllers
                 {
                     return BadRequest();
                 }
-                if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+                if (currentUser != currentItem.UploadedBy && !currentUser.IsAdmin)
                 {
                     throw new UnauthorizedException();
                 }
@@ -87,7 +81,7 @@ namespace CDN.Controllers
             {
                 CDNEntry currentItem = await repo.GetEntry(id);
 
-                if (currentUser.Name != currentItem.UploadedBy.Name && !currentUser.IsAdmin)
+                if (currentUser != currentItem.UploadedBy && !currentUser.IsAdmin)
                 {
                     throw new UnauthorizedException();
                 }
