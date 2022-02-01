@@ -53,7 +53,7 @@
 <Card>
     <Content class="flex flex-col p-2">
       <div class="flex flex-col">
-            {#if $currentDirectory?.content?.items && !loading}
+            {#if $currentDirectory?.content?.items?.length && loading === false}
                 {#each $currentDirectory?.content?.items as item}
                     {#if item.isDir}
                         <div class="flex flex-row items-center">

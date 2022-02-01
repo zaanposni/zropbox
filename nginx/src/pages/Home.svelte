@@ -1,17 +1,19 @@
 <script lang="ts">
-  import Explorer from "../components/Explorer.svelte";
-  import Hierarchy from "../components/Hierarchy.svelte";
-  import Quicksearch from "../components/Quicksearch.svelte";
-  import { currentDirectory, fillDummyData } from "../stores/directory";
+    import Explorer from "../components/Explorer.svelte";
+    import Hierarchy from "../components/Hierarchy.svelte";
+    import Quicksearch from "../components/Quicksearch.svelte";
+    import { currentDirectory, fillDummyData } from "../stores/directory";
 
-  // fillDummyData();
+    // fillDummyData();
 
-  function changeDirectory(id: number) {
-    console.log("change directory", id);
-    currentDirectory.get(`/directory/${id}`);
-  }
+    function changeDirectory(id: number) {
+        if (id === $currentDirectory?.content?.currentItemId) {
+             return;
+        }
+        currentDirectory.get(`/directory/${id}`);
+    }
 
-  currentDirectory.get('/directory/0');
+    currentDirectory.get('/directory/0');
 </script>
 
 <div class="flex flex-col grow items-center w-full h-full">
