@@ -1,4 +1,4 @@
-<script lang="ts">
+                              <script lang="ts">
     import Card, { Content } from "@smui/card";
     import IconButton, { Icon } from "@smui/icon-button";
     import { loggedInUser } from "../stores/authStore";
@@ -57,8 +57,8 @@
 <Card>
     <Content class="flex flex-col p-2">
       <div class="flex flex-col">
-            {#if $currentDirectory?.items && !loading}
-                {#each $currentDirectory?.items as item}
+            {#if $currentDirectory?.content?.items && !loading}
+                {#each $currentDirectory?.content?.items as item}
                     {#if item.isDir}
                         <div class="flex flex-row items-center">
                             <!-- Icon -->
@@ -84,7 +84,7 @@
                         <LinearProgress indeterminate closed={!item.loading}/>
                     {/if}
                 {/each}
-                {#each $currentDirectory?.items as item}
+                {#each $currentDirectory?.content?.items as item}
                     {#if item.isFile}
                         <div class="flex flex-row items-center grow-0">
                             <!-- Icon -->

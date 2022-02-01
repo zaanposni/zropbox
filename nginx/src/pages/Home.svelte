@@ -1,6 +1,6 @@
 <script lang="ts">
   import Explorer from "../components/Explorer.svelte";
-import Hierarchy from "../components/Hierarchy.svelte";
+  import Hierarchy from "../components/Hierarchy.svelte";
   import Quicksearch from "../components/Quicksearch.svelte";
   import { currentDirectory, fillDummyData } from "../stores/directory";
 
@@ -13,10 +13,12 @@ import Hierarchy from "../components/Hierarchy.svelte";
     console.log("change directory", id);
     explorerLoading = true;
     currentDirectory.update(x => {
-      x.items = [];
+      x.content.items = [];
       return x;
     });
   }
+
+  currentDirectory.get('/directory/0');
 </script>
 
 <div class="flex flex-col grow items-center w-full h-full">
@@ -37,9 +39,9 @@ import Hierarchy from "../components/Hierarchy.svelte";
         </div>
 
         <!-- TODO: Footer -->
-        {#if $currentDirectory?.items?.length}
+        {#if $currentDirectory?.content?.items?.length}
             <div class="greyed-text pl-2">
-                {$currentDirectory?.items?.length} items
+                {$currentDirectory?.content?.items?.length} items
             </div>
         {/if}
     </div>

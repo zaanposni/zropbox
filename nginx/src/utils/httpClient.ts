@@ -1,12 +1,13 @@
 import { writable } from 'svelte/store'
 import { ENABLE_CORS, API_URL } from '../config/config';
 import type { IHttpClient } from '../models/IHttpClient'
+import type { ILoadingContent } from '../models/ILoadingContent';
 
 // returns a store with HTTP access functions for get, post, patch, delete
 // anytime an HTTP request is made, the store is updated and all subscribers are notified.
-export default function(initial) {
+export default function<T>(initial): IHttpClient<T> {
   // create the underlying store
-  const store = writable(initial) as IHttpClient;
+  const store = writable<T>(initial) as any;
 
   store.upload = async (method: string, url: string, body: FormData = null, successCb: (json: any) => void = null, errorCb: (json: any) => void = null) => {
     // before we fetch, clear out previous errors and set `loading` to `true`
@@ -19,7 +20,8 @@ export default function(initial) {
 
     // define headers and body
     const headers = {
-      "Content-type": "multipart/form-data"
+      "Content-type": "multipart/form-data",
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
     };
     // execute fetch
     const credentials = ENABLE_CORS ? 'include' : 'same-origin';
@@ -30,7 +32,11 @@ export default function(initial) {
     // if response is 2xx
     if (response.ok) {
       // update the store, which will cause subscribers to be notified
-      store.set(json);
+      store.set({
+        content: json,
+        loading: false,
+        errors: null
+      });
       if (successCb) {
           successCb(json);
       }
@@ -59,7 +65,8 @@ export default function(initial) {
 
     // define headers and body
     const headers = {
-      "Content-type": "application/json"
+      "Content-type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem('token')}`
     };
     const body = params ? JSON.stringify(params) : undefined;
 
@@ -72,7 +79,11 @@ export default function(initial) {
     // if response is 2xx
     if (response.ok) {
       // update the store, which will cause subscribers to be notified
-      store.set(json);
+      store.set({
+        content: json,
+        loading: false,
+        errors: null
+      });
       if (successCb) {
           successCb(json);
       }

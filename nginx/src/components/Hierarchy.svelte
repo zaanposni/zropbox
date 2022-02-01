@@ -12,8 +12,8 @@
   let completePath: string = "";
   let lastThreeHierarchyElements: IHierarchy[] = [];
 
-  $: completePath = "Complete path: " + $loggedInUser.name + "/" + $currentDirectory?.hierarchy?.filter(x => !x.isRoot)?.map(h => h.name).join("/") ?? "";
-  $: lastThreeHierarchyElements = $currentDirectory?.hierarchy?.slice(1).slice(-3) ?? [];
+  $: completePath = "Complete path: " + $loggedInUser.name + "/" + $currentDirectory?.content?.hierarchy?.filter(x => !x.isRoot)?.map(h => h.name).join("/") ?? "";
+  $: lastThreeHierarchyElements = $currentDirectory?.content?.hierarchy?.slice(1).slice(-3) ?? [];
 
   const eventDispatcher = createEventDispatcher();
 
@@ -29,14 +29,14 @@
 <Card>
   <Content class="flex flex-col p-2">
     <div class="flex flex-row items-center">
-        {#if $currentDirectory?.hierarchy}
+        {#if $currentDirectory?.content?.hierarchy}
             <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
             <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
-              <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
+              <div class="primary font-medium px-2 py-1">{$loggedInUser?.content?.name}</div>
             </div>
             <span class="font-light px-1">/</span>
-            {#if $currentDirectory?.hierarchy?.length < 3}
-              {#each $currentDirectory?.hierarchy as directory}
+            {#if $currentDirectory?.content?.hierarchy?.length < 3}
+              {#each $currentDirectory?.content?.hierarchy as directory}
                 {#if !directory.isRoot}
                     <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", directory.id); }}>
                       <div class="px-2 py-1">{directory.name}</div>
@@ -59,7 +59,7 @@
         {:else}
             <IconButton class="material-icons cursor-pointer" on:click={() => { eventDispatcher("changeDir", 0); }}>folder_open</IconButton>
                 <div class="cursor-pointer bg-on-hover rounded-md" on:click={() => { eventDispatcher("changeDir", 0); }}>
-                  <div class="primary font-medium px-2 py-1">{$loggedInUser.name}</div>
+                  <div class="primary font-medium px-2 py-1">{$loggedInUser?.content?.name}</div>
                 </div>
             <span class="font-light px-1">/</span>
         {/if}

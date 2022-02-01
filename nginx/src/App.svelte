@@ -16,10 +16,7 @@
     initialLocale: getLocaleFromNavigator(),
   });
 
-  loggedInUser.set({
-    id: 1,
-    name: "zaanposni",
-  } as any);
+  loggedInUser.get('/auth');
 </script>
 
 <style global lang="postcss">
