@@ -7,6 +7,7 @@
     import DateDisplay from "./DateDisplay.svelte";
     import filesize from "filesize";
     import { createEventDispatcher } from "svelte";
+    import { showConfirmDialog, confirmDialogReturnFunc } from '../stores/confirmDialog';
 
     const eventDispatcher = createEventDispatcher();
 
@@ -48,6 +49,16 @@
                 return "file";
         }
     }
+
+    function deleteItem(id: number) {
+        function deleteConfirmed(e: any) {
+            if (e?.detail?.action === "yes") {
+                console.log("do delete", id);
+            }
+        }
+        confirmDialogReturnFunc.set(deleteConfirmed);
+        showConfirmDialog.set(true);
+    }
 </script>
 
 <Card>
@@ -67,14 +78,14 @@
                                 </div>
                                 <div class="grow" />
                                 <!-- Metadata -->
-                                <div title="filesize" class="shrink-0 greyed-text mr-2">{ filesize(item.size) }</div>
+                                <div title="filesize" class="shrink-0 greyed-text mr-8">{ filesize(item.size) }</div>
                                 <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
                             </div>
                             <!-- Action buttons -->
                             <div class="flex flex-row shrink-0">
                                 <IconButton class="material-icons invisible">share</IconButton>
                                 <IconButton class="material-icons invisible">share</IconButton>
-                                <IconButton class="material-icons px-0" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
+                                <IconButton class="material-icons px-0" on:click={() => deleteItem(item.id)}>delete</IconButton>
                             </div>
                         </div>
                         <LinearProgress indeterminate closed={!item.loading}/>
@@ -95,7 +106,7 @@
                                 </div>
                                 <div class="grow" />
                                 <!-- Metadata -->
-                                <div title="filesize" class="shrink-0 greyed-text mr-2">{ filesize(item.size) }</div>
+                                <div title="filesize" class="shrink-0 greyed-text mr-8">{ filesize(item.size) }</div>
                                 <DateDisplay title="uploaded at" class="shrink-0 greyed-text" date={item.uploadedAt} />
                             </a>
                             <!-- Action buttons -->
@@ -105,7 +116,7 @@
                                     <Icon class="material-icons" on>lock_open</Icon>
                                     <Icon class="material-icons">lock</Icon>
                                 </IconButton>
-                                <IconButton class="material-icons px-0" on:click={() => { console.log("delete", item.id) }}>delete</IconButton>
+                                <IconButton class="material-icons px-0" on:click={() => deleteItem(item.id)}>delete</IconButton>
                             </div>
                         </div>
                         <LinearProgress indeterminate closed={!item.loading}/>

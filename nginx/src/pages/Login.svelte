@@ -6,22 +6,34 @@
   import LinearProgress from '@smui/linear-progress';
   import { loggedInUser } from "../stores/authStore";
   import { _ } from "svelte-i18n";
+  import http from "../utils/httpClient";
+  import setCookie from "../utils/setCookie";
 
   let username: string = "";
   let password: string = "";
 
   let invalidUsername = false;
   let invalidPassword = false;
-  $: disabled = !username || !password || invalidUsername || invalidPassword;
+  $: disabled = !username || !password || invalidUsername || invalidPassword || loggingInProgress;
 
   let loggingInProgress: boolean = false;
+  let loginStore = http({});
 
   function login() {
-    loggingInProgress = true;
+      loggingInProgress = true;
 
-    setTimeout(() => {
-      loggedInUser.set({} as any);
-    }, 5000);
+      const data = {
+          username,
+          password
+      };
+
+      loginStore.post('/auth/login', data, (response) => {
+          loggingInProgress = false;
+          setCookie('zropbox_access_token', response.token, 1);
+          loggedInUser.get('/auth');
+      }, () => {
+          loggingInProgress = false
+      });
   }
 </script>
 
@@ -53,7 +65,7 @@
           <i class="material-icons" aria-hidden="true">arrow_forward</i>{$_('Login.LoginButton')}
         </Button>
       </Actions>
-      <LinearProgress indeterminate closed={! loggingInProgress}/>
+      <LinearProgress indeterminate closed={!loggingInProgress}/>
     </Card>
   </div>
 </div>

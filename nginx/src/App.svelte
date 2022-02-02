@@ -6,6 +6,7 @@
   import Login from "./pages/Login.svelte";
   import Home from "./pages/Home.svelte";
   import { isLoggedIn, loggedInUser } from "./stores/authStore";
+  import ConfirmDialog from "./components/ConfirmDialog.svelte";
 
   addMessages("en", en);
   addMessages("en-US", en);
@@ -27,6 +28,7 @@
 
 <main class="w-full h-full">
   <div class="flex flex-grow w-full h-full">
+    <ConfirmDialog/>
     {#if $isLoggedIn}
       <Home></Home>
     {:else}
