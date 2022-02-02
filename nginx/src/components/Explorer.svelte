@@ -1,16 +1,20 @@
-                              <script lang="ts">
+<script lang="ts">
     import Card, { Content } from "@smui/card";
     import IconButton, { Icon } from "@smui/icon-button";
-    import { loggedInUser } from "../stores/authStore";
-    import { currentDirectory } from "../stores/directory";
     import LinearProgress from '@smui/linear-progress';
     import DateDisplay from "./DateDisplay.svelte";
     import filesize from "filesize";
     import { createEventDispatcher } from "svelte";
     import { showConfirmDialog, confirmDialogReturnFunc } from '../stores/confirmDialog';
+    import type { IDirectoryEntry } from "../models/IDirectoryEntry";
+    import type { IHttpClient } from "../models/IHttpClient";
+    import type { ILoadingContent } from "../models/ILoadingContent";
+    import type { IDirectoryView } from "../models/IDirectoryView";
+    import httpClient from "../utils/httpClient";
 
     const eventDispatcher = createEventDispatcher();
 
+    export let directoryStore: IHttpClient<ILoadingContent<IDirectoryView>>;
     export let loading: boolean = false;
 
     function getIconBasedOnName(name: string): string {
@@ -50,22 +54,61 @@
         }
     }
 
+    $: console.log($directoryStore);
+
     function deleteItem(id: number) {
         function deleteConfirmed(e: any) {
             if (e?.detail?.action === "yes") {
                 console.log("do delete", id);
+                directoryStore.update(x => {
+                    if (x?.content?.items) {
+                        x.content.items = x.content.items.filter(y => y.id !== id);
+                    }
+                    return x;
+                });
             }
         }
         confirmDialogReturnFunc.set(deleteConfirmed);
         showConfirmDialog.set(true);
+    }
+
+    function changePublicStatusItem(item: IDirectoryEntry) {
+        if (item.loading) {
+            return;
+        }
+        directoryStore.update(x => {
+            let index = x?.content?.items?.findIndex(y => y.id === item.id);
+            if (index !== null && index !== -1) {
+                // x.content.items[index].isPublic = !x.content.items[index].isPublic;
+                x.content.items[index].loading = true;
+            }
+            return x;
+        });
+        let updateEntry = httpClient({});
+        const data = {
+            name: item.name,
+            isPublic: !item.isPublic
+        };
+        updateEntry.put(`/files/${item.id}`, data, () => {
+            directoryStore.update(x => {
+                let index = x?.content?.items?.findIndex(y => y.id === item.id);
+                if (index !== null && index !== -1) {
+                    x.content.items[index].isPublic = !x.content.items[index].isPublic;
+                    x.content.items[index].loading = false;
+                }
+                return x;
+            });
+        }, (error) => {
+            console.error(error);
+        });
     }
 </script>
 
 <Card>
     <Content class="flex flex-col p-2">
       <div class="flex flex-col">
-            {#if $currentDirectory?.content?.items?.length && loading === false}
-                {#each $currentDirectory?.content?.items as item}
+            {#if $directoryStore?.content?.items?.length && loading === false}
+                {#each $directoryStore?.content?.items as item}
                     {#if item.isDir}
                         <div class="flex flex-row items-center">
                             <!-- Icon -->
@@ -91,7 +134,7 @@
                         <LinearProgress indeterminate closed={!item.loading}/>
                     {/if}
                 {/each}
-                {#each $currentDirectory?.content?.items as item}
+                {#each $directoryStore?.content?.items as item}
                     {#if item.isFile}
                         <div class="flex flex-row items-center grow-0">
                             <!-- Icon -->
@@ -111,12 +154,12 @@
                             </a>
                             <!-- Action buttons -->
                             <div class="flex flex-row shrink-0">
-                                <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }}>share</IconButton>
-                                <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => { console.log("restrict", item.id, item.isPublic); }}>
+                                <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }} readonly={item.loading}>share</IconButton>
+                                <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => changePublicStatusItem(item)} readonly={item.loading}>
                                     <Icon class="material-icons" on>lock_open</Icon>
                                     <Icon class="material-icons">lock</Icon>
                                 </IconButton>
-                                <IconButton class="material-icons px-0" on:click={() => deleteItem(item.id)}>delete</IconButton>
+                                <IconButton class="material-icons px-0" on:click={() => deleteItem(item.id)} readonly={item.loading}>delete</IconButton>
                             </div>
                         </div>
                         <LinearProgress indeterminate closed={!item.loading}/>

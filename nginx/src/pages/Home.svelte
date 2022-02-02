@@ -30,7 +30,7 @@
 
         <!-- Explorer -->
         <div class="card-container">
-            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={$currentDirectory?.loading} />
+            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={$currentDirectory?.loading} directoryStore={currentDirectory} />
         </div>
 
         <!-- TODO: Footer -->
