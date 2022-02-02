@@ -70,7 +70,7 @@ namespace Zropbox.Repositories
             };
         }
 
-        public async Task<CDNEntry> UploadFile(IFormFile file, int parentId, User user, bool isPublic)
+        public async Task<CDNEntry> UploadFile(IFormFile file, int parentId, User user, bool isPublic, string fileName)
         {
             CDNEntry parentEntry = null;
             if (parentId != 0)
@@ -84,7 +84,7 @@ namespace Zropbox.Repositories
 
             CDNEntry newEntry = new CDNEntry
             {
-                Name = file.FileName,
+                Name = fileName,
                 IsDir = false,
                 IsPublic = isPublic,
                 Parent = parentEntry,
@@ -105,6 +105,41 @@ namespace Zropbox.Repositories
             }
 
             await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
+            return newEntry;
+        }
+
+        public async Task DeleteEntry(int entryId)
+        {
+            CDNEntry entry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(entryId);
+
+            if (!entry.IsDir)
+            {
+                string filePath = Path.Join(Config.GetFileRootPath(), entryId.ToString());
+                string fullFilePath = Path.GetFullPath(filePath);
+                // https://stackoverflow.com/a/1321535/9850709
+                if (fullFilePath != filePath)
+                {
+                    throw new ResourceNotFoundException();
+                }
+
+                try
+                {
+                    File.Delete(filePath);
+                } catch (Exception ex)
+                {
+                    Logger.LogError(ex, $"Failed to delete file {entryId}");
+                }
+            }
+
+            Context.CDNEntries.Remove(entry);
+            await Context.SaveChangesAsync();
+        }
+
+        public async Task<CDNEntry> EditEntry(CDNEntry newEntry)
+        {
+            Context.CDNEntries.Update(newEntry);
+            await Context.SaveChangesAsync();
+
             return newEntry;
         }
     }

@@ -2,13 +2,11 @@
 
 namespace Zropbox.Models.DTO
 {
-    public class FileUpload
+    public class FileEditDto
     {
         [Required]
         [MaxLength(30)]
-        public string FileName { get; set; }
-        [Required]
-        public IFormFile File { set; get; }
+        public string Name { get; set; }
         [Required]
         public bool IsPublic { get; set; }
     }

@@ -68,7 +68,54 @@ namespace Zropbox.Controllers.v1
                 }
             }
 
-            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).UploadFile(file.File, id, currentUser, file.IsPublic)));
+            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).UploadFile(file.File, id, currentUser, file.IsPublic, file.FileName)));
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteFile([FromRoute] int id)
+        {
+            await ValidateLogin();
+            User currentUser = await GetCurrentUser();
+
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            CDNEntry dirEntry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(id);
+            if (dirEntry.UploadedBy != currentUser && !currentUser.IsAdmin)
+            {
+                throw new UnauthorizedException();
+            }
+
+            await FileRepository.CreateDefault(ServiceProvider).DeleteEntry(id);
+
+            return Ok();
+
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> EditFile([FromRoute] int id, [FromBody] FileEditDto dto)
+        {
+            await ValidateLogin();
+            User currentUser = await GetCurrentUser();
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            CDNEntry entry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(id);
+            if (entry.UploadedBy != currentUser && !currentUser.IsAdmin)
+            {
+                throw new UnauthorizedException();
+            }
+
+            entry.Name = dto.Name;
+            entry.IsPublic = dto.IsPublic;
+
+            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).EditEntry(entry)));
         }
     }
 }
