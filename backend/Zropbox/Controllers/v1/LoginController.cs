@@ -36,9 +36,12 @@ namespace Zropbox.Controllers
         {
             IActionResult response = Unauthorized();
 
-            if (await UserRepository.CreateDefault(ServiceProvider).CheckLogin(login.Username, login.Password))
+            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
+
+            if (await repo.CheckLogin(login.Username, login.Password))
             {
-                var tokenString = GenerateJSONWebToken(login.Username);
+                User user = await repo.GetUser(login.Username);
+                var tokenString = GenerateJSONWebToken(user.Name);
                 response = Ok(new { token = tokenString });
             }
 
