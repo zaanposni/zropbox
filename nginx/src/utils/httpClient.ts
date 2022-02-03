@@ -24,10 +24,20 @@ export default function<T>(initial): IHttpClient<T> {
     };
     // execute fetch
     const credentials = ENABLE_CORS ? 'include' : 'same-origin';
-    const response = await fetch(API_URL + url, { method, body, headers, credentials });
-    // pull out json body
-    const json = await response.json();
 
+    let response;
+    try {
+      response = await fetch(API_URL + url, { method, body, headers, credentials });
+    } catch (e) {
+      response = e;
+    }
+    // pull out json body
+    let json;
+    try {
+      json = await response.json();
+    } catch(e) {
+      json = response;
+    }
     // if response is 2xx
     if (response.ok) {
       // update the store, which will cause subscribers to be notified

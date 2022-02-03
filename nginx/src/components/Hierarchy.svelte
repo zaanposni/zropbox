@@ -9,6 +9,7 @@
     import type { IHierarchy } from "../models/IHierarchyEntry";
     import { uploadDialog, showUploadDialog, uploadDialogReturnFunc } from "../stores/uploadDialog";
     import httpClient from "../utils/httpClient";
+    import { toastError, toastSuccess } from "../utils/toast";
 
     let fileinput;
 
@@ -50,9 +51,19 @@
             formData.append("Name", $uploadDialog.name);
             formData.append("IsPublic", $uploadDialog.isPublic ? 'true' : 'false');
             upload.upload("POST", `/files/${$currentDirectory.content.currentItemId}`, formData, (response) => {
-                console.log(response);
-            }, (error) => {
-                console.log(error);
+                currentDirectory.update(c => {
+                    toastSuccess("File uploaded");
+                    if (c.content.items) {
+                        c.content.items.unshift(response);
+                    }
+                    return c;
+                })
+            }, (e) => {
+                if (e?.status === 413) {
+                    toastError("File is too big");
+                } else {
+                    toastError("Error uploading file");
+                }
             });
         }
     }

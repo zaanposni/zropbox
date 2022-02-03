@@ -30,6 +30,7 @@ export function getIconBasedOnName(name: string): string {
         case "png":
         case "jpg":
         case "jpeg":
+        case "webp":
             return "image";
         case "gif":
             return "gif";
