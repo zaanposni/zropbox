@@ -25,15 +25,15 @@
     }
 
     * :global(.quicksearch-paper) {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-      height: 48px;
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        height: 48px;
     }
 
-    * :global(.quicksearch-paper > *) {
-      display: inline-block;
-      margin: 0 12px;
+    * :global(.quicksearch-paper > Input) {
+        display: inline-block;
+        margin: 0 12px;
     }
 
     * :global(.quicksearch-input::placeholder) {
@@ -43,9 +43,9 @@
 </style>
 
 <div class="quicksearch-container w-100">
-    <Paper class="quicksearch-paper grow mr-3" elevation={6}>
-        <Icon class="material-icons">search</Icon>
-        <Input bind:value on:keydown={handleKeyDown} placeholder="Quicksearch" class="quicksearch-input" />
+    <Paper class="quicksearch-paper grow mr-2" elevation={6}>
+        <Icon class="material-icons pl-1">search</Icon>
+        <Input bind:value on:keydown={handleKeyDown} placeholder="Quicksearch" class="quicksearch-input pl-2" />
     </Paper>
     <Fab on:click={doSearch} disabled={value?.trim() === ''} color=primary mini class="quicksearch-fab mr-3">
         <Icon class="material-icons">arrow_forward</Icon>
