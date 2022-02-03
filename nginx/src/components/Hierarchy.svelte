@@ -8,6 +8,7 @@
     import List, { Item, Text, Graphic } from "@smui/list";
     import type { IHierarchy } from "../models/IHierarchyEntry";
     import { uploadDialog, showUploadDialog, uploadDialogReturnFunc } from "../stores/uploadDialog";
+    import httpClient from "../utils/httpClient";
 
     let fileinput;
 
@@ -16,7 +17,8 @@
         uploadDialog.set({
             file: image,
             name: image.name,
-            size: image.size
+            size: image.size,
+            isPublic: true
         });
         uploadDialogReturnFunc.set(uploadFile);
         showUploadDialog.set(true);
@@ -41,7 +43,18 @@
     }
 
     function uploadFile(e) {
-        console.log("upload file", e);
+        if (e?.detail?.action === "upload") {
+            const upload = httpClient({});
+            let formData = new FormData();
+            formData.append("File", $uploadDialog.file);
+            formData.append("Name", $uploadDialog.name);
+            formData.append("IsPublic", $uploadDialog.isPublic ? 'true' : 'false');
+            upload.upload("POST", `/files/${$currentDirectory.content.currentItemId}`, formData, (response) => {
+                console.log(response);
+            }, (error) => {
+                console.log(error);
+            });
+        }
     }
 </script>
 

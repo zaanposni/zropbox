@@ -1,5 +1,6 @@
 export interface IUploadDialogEntry {
     name: string;
     size: number;
-    file: File
+    file: File;
+    isPublic: boolean;
 }

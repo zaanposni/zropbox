@@ -25,6 +25,10 @@
     $: console.log("hi", name);
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
+        uploadDialog.update(x => {
+            x.name = name;
+            return x;
+        });
         showUploadDialog.set(false);
         if ($uploadDialogReturnFunc) {
             $uploadDialogReturnFunc(e);
@@ -62,10 +66,10 @@
         </div>
     </Content>
     <Actions>
-        <Button action="no">
+        <Button action="cancel">
             <Label>Cancel</Label>
         </Button>
-        <Button action="yes" default disabled={invalidFilename}>
+        <Button action="upload" default disabled={invalidFilename}>
             <Label>Upload</Label>
         </Button>
     </Actions>

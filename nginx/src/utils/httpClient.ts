@@ -20,7 +20,6 @@ export default function<T>(initial): IHttpClient<T> {
 
     // define headers and body
     const headers = {
-      "Content-type": "multipart/form-data",
       "Authorization": `Bearer ${getCookie('zropbox_access_token')}`
     };
     // execute fetch
