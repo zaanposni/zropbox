@@ -12,48 +12,12 @@
     import type { IDirectoryView } from "../models/IDirectoryView";
     import httpClient from "../utils/httpClient";
     import { toastSuccess, toastError } from "../utils/toast";
+    import { getIconBasedOnName } from "../utils/fileIcon";
 
     const eventDispatcher = createEventDispatcher();
 
     export let directoryStore: IHttpClient<ILoadingContent<IDirectoryView>>;
     export let loading: boolean = false;
-
-    function getIconBasedOnName(name: string): string {
-        const type = name.split(".").pop();
-        if (type === name) {
-            return "image";
-        }
-
-        switch (type) {
-            case "pdf":
-                return "picture_as_pdf";
-            case "doc":
-            case "docx":
-            case "txt":
-                return "description";
-            case "xls":
-            case "xlsx":
-                return "table_chart";
-            case "ppt":
-            case "pptx":
-                return "powerpoint";
-            case "zip":
-            case "rar":
-                return "folder_zip";
-            case "mp3":
-                return "library_music";
-            case "mp4":
-                return "video_library";
-            case "png":
-            case "jpg":
-            case "jpeg":
-                return "image";
-            case "gif":
-                return "gif";
-            default:
-                return "file";
-        }
-    }
 
     function setItemLoading(id: number, loading: boolean) {
         directoryStore.update(x => {

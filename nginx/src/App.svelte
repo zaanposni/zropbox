@@ -6,6 +6,7 @@
   import Home from "./pages/Home.svelte";
   import { isLoggedIn, loggedInUser } from "./stores/authStore";
   import ConfirmDialog from "./components/ConfirmDialog.svelte";
+  import UploadDialog from "./components/UploadDialog.svelte";
   import { SvelteToast } from '@zerodevx/svelte-toast'
 
   addMessages("en", en);
@@ -30,6 +31,7 @@
   <div class="flex flex-grow w-full h-full">
     <SvelteToast />
     <ConfirmDialog/>
+    <UploadDialog/>
     {#if $isLoggedIn}
       <Home></Home>
     {:else}
