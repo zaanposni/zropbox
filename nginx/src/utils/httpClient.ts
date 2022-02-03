@@ -74,7 +74,12 @@ export default function<T>(initial): IHttpClient<T> {
     const credentials = ENABLE_CORS ? 'include' : 'same-origin';
     const response = await fetch(API_URL + url, { method, body, headers, credentials });
     // pull out json body
-    const json = await response.json();
+    let json;
+    try {
+      json = await response.json();
+    } catch(e) {
+      json = {};
+    }
 
     // if response is 2xx
     if (response.ok) {
