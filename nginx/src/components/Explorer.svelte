@@ -55,15 +55,33 @@
         }
     }
 
+    function setItemLoading(id: number, loading: boolean) {
+        directoryStore.update(x => {
+            let index = x?.content?.items?.findIndex(y => y.id === id);
+            if (index !== null && index !== -1) {
+                x.content.items[index].loading = loading;
+            }
+            return x;
+        });
+    }
+
     function deleteItem(id: number) {
         function deleteConfirmed(e: any) {
             if (e?.detail?.action === "yes") {
-                console.log("do delete", id);
-                directoryStore.update(x => {
-                    if (x?.content?.items) {
-                        x.content.items = x.content.items.filter(y => y.id !== id);
-                    }
-                    return x;
+                setItemLoading(id, true);
+                let deleteEntry = httpClient({});
+                deleteEntry.delete(`/files/${id}`, {}, () => {
+                    toastSuccess("Successfully deleted");
+                    directoryStore.update(x => {
+                        if (x?.content?.items) {
+                            x.content.items = x.content.items.filter(y => y.id !== id);
+                        }
+                        return x;
+                    });
+                }, (error) => {
+                    toastError("Failed to delete");
+                    setItemLoading(id, false);
+                    console.error(error);
                 });
             }
         }
@@ -75,14 +93,7 @@
         if (item.loading) {
             return;
         }
-        directoryStore.update(x => {
-            let index = x?.content?.items?.findIndex(y => y.id === item.id);
-            if (index !== null && index !== -1) {
-                // x.content.items[index].isPublic = !x.content.items[index].isPublic;
-                x.content.items[index].loading = true;
-            }
-            return x;
-        });
+        setItemLoading(item.id, true);
         let updateEntry = httpClient({});
         const data = {
             name: item.name,
@@ -100,6 +111,7 @@
             });
         }, (error) => {
             toastError("Failed to update");
+            setItemLoading(item.id, false);
             console.error(error);
         });
     }
