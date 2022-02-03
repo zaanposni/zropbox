@@ -1,14 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Zropbox.Models;
 using Zropbox.Repositories;
-using Zropbox.Models.DTO;
 using Zropbox.Exceptions;
 
 
@@ -68,7 +61,7 @@ namespace Zropbox.Controllers.v1
                 }
             }
 
-            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).UploadFile(file.File, id, currentUser, file.IsPublic, file.FileName)));
+            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).UploadFile(file.File, id, currentUser, file.IsPublic, file.Name)));
         }
 
         [HttpDelete("{id}")]

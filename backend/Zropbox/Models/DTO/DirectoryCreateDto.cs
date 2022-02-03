@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Zropbox.Models.DTO
+namespace Zropbox.Models
 {
     public class DirectoryCreateDto
     {

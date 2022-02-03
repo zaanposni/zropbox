@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Zropbox.Models;
 using Zropbox.Repositories;
-using Zropbox.Models.DTO;
 using Zropbox.Exceptions;
 
 namespace Zropbox.Controllers

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Zropbox.Models.DTO
+namespace Zropbox.Models
 {
     public class FileUpload
     {
         [Required]
         [MaxLength(30)]
-        public string FileName { get; set; }
+        public string Name { get; set; }
         [Required]
         public IFormFile File { set; get; }
         [Required]
