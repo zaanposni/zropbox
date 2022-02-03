@@ -1,10 +1,10 @@
 export function getIconBasedOnName(name: string): string {
     if (!name) {
-        return "image";
+        return "description";
     }
     const type = name.split(".").pop();
     if (type === name) {
-        return "image";
+        return "description";
     }
 
     switch (type) {
