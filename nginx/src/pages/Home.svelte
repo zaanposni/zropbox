@@ -3,6 +3,9 @@
     import Hierarchy from "../components/Hierarchy.svelte";
     import Quicksearch from "../components/Quicksearch.svelte";
     import { currentDirectory, fillDummyData } from "../stores/directory";
+    import { uploadDialog, showUploadDialog, uploadDialogReturnFunc } from "../stores/uploadDialog";
+    import httpClient from "../utils/httpClient";
+    import { toastError, toastSuccess } from "../utils/toast";
 
     // fillDummyData();
 
@@ -11,6 +14,43 @@
              return;
         }
         currentDirectory.get(`/directory/${id}`);
+    }
+
+    const onFileSelected = (e) => {
+        let image = e.detail.target.files[0];
+        uploadDialog.set({
+            file: image,
+            name: image.name,
+            size: image.size,
+            isPublic: true
+        });
+        uploadDialogReturnFunc.set(uploadFile);
+        showUploadDialog.set(true);
+    };
+
+    function uploadFile(e) {
+        if (e?.detail?.action === "upload") {
+            const upload = httpClient({});
+            let formData = new FormData();
+            formData.append("File", $uploadDialog.file);
+            formData.append("Name", $uploadDialog.name);
+            formData.append("IsPublic", $uploadDialog.isPublic ? 'true' : 'false');
+            upload.upload("POST", `/files/${$currentDirectory.content.currentItemId}`, formData, (response) => {
+                currentDirectory.update(c => {
+                    toastSuccess("File uploaded");
+                    if (c.content.items) {
+                        c.content.items.unshift(response);
+                    }
+                    return c;
+                })
+            }, (e) => {
+                if (e?.status === 413) {
+                    toastError("File is too big");
+                } else {
+                    toastError("Error uploading file");
+                }
+            });
+        }
     }
 
     currentDirectory.get('/directory/0');
@@ -25,7 +65,7 @@
 
         <!-- Hierarchy -->
         <div class="card-container mb-4">
-            <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}} />
+            <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}} on:fileSelected={onFileSelected} />
         </div>
 
         <!-- Explorer -->
