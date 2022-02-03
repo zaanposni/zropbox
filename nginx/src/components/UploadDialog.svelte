@@ -13,16 +13,20 @@
     let name = "";
     let icon = "image";
     let size = "";
+    $: invalidFilename = ((name?.trim() ?? "") === "") || name?.length > 30;
     $: $uploadDialog?.name ? loadInitial() : undefined;
     $: icon = getIconBasedOnName($uploadDialog?.file?.name);
     $: size = fileSize($uploadDialog?.file?.size ?? 0, { fullform: true});
 
     function loadInitial() {
         name = $uploadDialog?.name ?? "";
-        invalidFilename = ((name?.trim() ?? "") === "");
+        if (name?.length > 30) {
+            name = "";
+        }
+        invalidFilename = ((name?.trim() ?? "") === "") || name?.length > 30;
     }
 
-    $: console.log("hi", name);
+    $: console.log("hi", invalidFilename);
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
         uploadDialog.update(x => {
@@ -49,9 +53,7 @@
             <div class="flex flex-col grow">
                 <div>
                     <Textfield bind:value={name}
-                               bind:invalid={invalidFilename}
                                required
-                               updateInvalid
                                label="Filename"
                                input$maxlength={30}
                                style="width: 100%;"
