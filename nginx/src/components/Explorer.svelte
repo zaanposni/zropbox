@@ -11,6 +11,7 @@
     import type { ILoadingContent } from "../models/ILoadingContent";
     import type { IDirectoryView } from "../models/IDirectoryView";
     import httpClient from "../utils/httpClient";
+    import { toastSuccess, toastError } from "../utils/toast";
 
     const eventDispatcher = createEventDispatcher();
 
@@ -54,8 +55,6 @@
         }
     }
 
-    $: console.log($directoryStore);
-
     function deleteItem(id: number) {
         function deleteConfirmed(e: any) {
             if (e?.detail?.action === "yes") {
@@ -90,6 +89,7 @@
             isPublic: !item.isPublic
         };
         updateEntry.put(`/files/${item.id}`, data, () => {
+            toastSuccess("Successfully updated");
             directoryStore.update(x => {
                 let index = x?.content?.items?.findIndex(y => y.id === item.id);
                 if (index !== null && index !== -1) {
@@ -99,6 +99,7 @@
                 return x;
             });
         }, (error) => {
+            toastError("Failed to update");
             console.error(error);
         });
     }

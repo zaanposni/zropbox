@@ -11,6 +11,7 @@ body {
   --zp-bg-primary: #5CDB95;
   --zp-text-secondary: #05386B;
   --zp-text-primary: #EDF5E1;
+  --toastPadding: 10px;
 }
 
 body {
@@ -45,4 +46,9 @@ body {
   100% {
     opacity: 1;
   }
+}
+
+
+._toastMsg {
+  font-weight: 500;
 }

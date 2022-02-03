@@ -2,11 +2,11 @@
   import { addMessages, init, getLocaleFromNavigator } from "svelte-i18n";
   import en from "./i18n/en.json";
   import de from "./i18n/de.json";
-
   import Login from "./pages/Login.svelte";
   import Home from "./pages/Home.svelte";
   import { isLoggedIn, loggedInUser } from "./stores/authStore";
   import ConfirmDialog from "./components/ConfirmDialog.svelte";
+  import { SvelteToast } from '@zerodevx/svelte-toast'
 
   addMessages("en", en);
   addMessages("en-US", en);
@@ -28,6 +28,7 @@
 
 <main class="w-full h-full">
   <div class="flex flex-grow w-full h-full">
+    <SvelteToast />
     <ConfirmDialog/>
     {#if $isLoggedIn}
       <Home></Home>
