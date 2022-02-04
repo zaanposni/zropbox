@@ -104,7 +104,9 @@ namespace Zropbox.Repositories
                 throw new ResourceNotFoundException();
             }
 
-            await file.CopyToAsync(new FileStream(filePath, FileMode.Create));
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(fileStream);
+
             return newEntry;
         }
 
