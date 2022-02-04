@@ -7,6 +7,9 @@
     import Menu, { MenuComponentDev } from "@smui/menu";
     import List, { Item, Text, Graphic } from "@smui/list";
     import type { IHierarchy } from "../models/IHierarchyEntry";
+    import { createDirectoryDialog, createDirectoryDialogReturnFunc, showCreateDirectoryDialog } from "../stores/createDirectoryDialog";
+    import httpClient from "../utils/httpClient";
+import { toastError, toastSuccess } from "../utils/toast";
 
     let fileinput;
     let addMenu: MenuComponentDev;
@@ -23,8 +26,29 @@
 
     const eventDispatcher = createEventDispatcher();
 
-    function createNewDir() {
-        console.log("create new dir");
+    function newDirDialog() {
+        createDirectoryDialogReturnFunc.set(createNewDir);
+        showCreateDirectoryDialog.set(true);
+    }
+
+    function createNewDir(e) {
+        if (e?.detail?.action === "upload") {
+            const upload = httpClient({});
+            const data = {
+                name: $createDirectoryDialog,
+            };
+            upload.post(`/directory/${$currentDirectory.content.currentItemId}`, data, (res) => {
+                currentDirectory.update(c => {
+                    if (c?.content?.items) {
+                        c.content.items.unshift(res);
+                    }
+                    return c;
+                });
+                toastSuccess("Directory created");
+            }, () => {
+                toastError("Error creating directory");
+            });
+        }
     }
 </script>
 
@@ -83,7 +107,7 @@
                     on:click={() => addMenu.setOpen(true)}>add</IconButton>
                 <Menu bind:this={addMenu}>
                     <List>
-                        <Item on:SMUI:action={createNewDir}>
+                        <Item on:SMUI:action={newDirDialog}>
                             <Graphic class="material-icons mr-2">create_new_folder</Graphic>
                             <Text>Directory</Text>
                         </Item>

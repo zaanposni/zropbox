@@ -8,6 +8,7 @@
   import ConfirmDialog from "./components/ConfirmDialog.svelte";
   import UploadDialog from "./components/UploadDialog.svelte";
   import { SvelteToast } from '@zerodevx/svelte-toast'
+  import CreateDirectoryDialog from "./components/CreateDirectoryDialog.svelte";
 
   addMessages("en", en);
   addMessages("en-US", en);
@@ -30,8 +31,9 @@
 <main class="w-full h-full">
   <div class="flex flex-grow w-full h-full">
     <SvelteToast />
-    <ConfirmDialog/>
-    <UploadDialog/>
+    <ConfirmDialog />
+    <UploadDialog />
+    <CreateDirectoryDialog />
     {#if $isLoggedIn}
       <Home></Home>
     {:else}

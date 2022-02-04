@@ -96,7 +96,7 @@ namespace Zropbox.Controllers
                 Size = 0,
                 UploadedAt = DateTime.UtcNow,
                 UploadedBy = currentUser,
-                IsPublic = dto.IsPublic,
+                IsPublic = false,
             };
 
             return Ok(new DirectoryItemView(await repo.CreateSubDir(newEntry, id)));
