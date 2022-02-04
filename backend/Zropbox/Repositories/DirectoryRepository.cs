@@ -25,12 +25,12 @@ namespace Zropbox.Repositories
 
         public async Task<List<CDNEntry>> GetItemsInDirectory(int id)
         {
-            return await Context.CDNEntries.Include(x => x.Parent).AsQueryable().Where(x => x.Parent != null && x.Parent.Id == id).ToListAsync();
+            return await Context.CDNEntries.Include(x => x.Parent).AsQueryable().OrderByDescending(x => x.UploadedAt).Where(x => x.Parent != null && x.Parent.Id == id).ToListAsync();
         }
 
         public async Task<List<CDNEntry>> GetItemsInRootDirectory(int userId)
         {
-            return await Context.CDNEntries.Include(x => x.Parent).Include(x => x.UploadedBy).AsQueryable().Where(x => x.UploadedBy != null && x.UploadedBy.Id == userId && x.Parent == null).ToListAsync();
+            return await Context.CDNEntries.Include(x => x.Parent).Include(x => x.UploadedBy).AsQueryable().OrderByDescending(x => x.UploadedAt).Where(x => x.UploadedBy != null && x.UploadedBy.Id == userId && x.Parent == null).ToListAsync();
         }
 
         public async Task<CDNEntry> CreateSubDir(CDNEntry entry, int parentId = 0)
