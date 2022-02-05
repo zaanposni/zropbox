@@ -34,7 +34,7 @@ builder.Services
     .AddSingleton<InternalConfiguration>();
 
 string jwtToken = Environment.GetEnvironmentVariable("JWT_KEY");
-if (jwtToken == null) throw new InvalidConfigurationException("JWT_KEY not found.");
+if (string.IsNullOrEmpty(jwtToken)) throw new InvalidConfigurationException("JWT_KEY not found.");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
