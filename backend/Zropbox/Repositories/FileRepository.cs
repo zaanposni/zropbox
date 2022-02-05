@@ -18,16 +18,24 @@ namespace Zropbox.Repositories
             new FileExtensionContentTypeProvider().TryGetContentType(path, out string contentType);
             return contentType ?? "application/octet-stream";
         }
-
         public async Task<FileServe> GetFile(int entryId)
         {
             CDNEntry entry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(entryId);
+            if (entry == null)
+            {
+                throw new ResourceNotFoundException();
+            }
+            return await GetFile(entry);
+        }
+
+        public async Task<FileServe> GetFile(CDNEntry entry)
+        {
             if (entry == null || entry.IsDir)
             {
                 throw new ResourceNotFoundException();
             }
 
-            string filePath = Path.Join(Config.GetFileRootPath(), entryId.ToString());
+            string filePath = Path.Join(Config.GetFileRootPath(), entry.Id.ToString());
             string fullFilePath = Path.GetFullPath(filePath);
             // https://stackoverflow.com/a/1321535/9850709
             if (fullFilePath != filePath)
