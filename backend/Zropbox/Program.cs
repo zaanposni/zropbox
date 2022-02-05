@@ -85,7 +85,7 @@ using (var scope = app.Services.CreateScope())
     {
         Random random = new();
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        string password = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
+        string password = new(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
         await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser("admin", password, true);
 
@@ -101,6 +101,8 @@ using (var scope = app.Services.CreateScope())
 using (var scope = app.Services.CreateScope())
 {
     scope.ServiceProvider.GetRequiredService<InternalConfiguration>().Init();
+
+    await AppSettingsRepository.CreateDefault(scope.ServiceProvider).ApplyAppSettings();
 }
 
 // Configure the HTTP request pipeline.

@@ -11,7 +11,7 @@
         {
             Id = entry.Id;
             Hash = entry.Hash;
-            Url = $"/share/{Hash}";
+            Url = $"{Environment.GetEnvironmentVariable("META_SERVICE_BASE_URL")}/share/{Hash}";
             ValidUntil = entry.ValidUntil;
         }
     }

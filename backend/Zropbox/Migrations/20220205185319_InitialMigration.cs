@@ -20,7 +20,9 @@ namespace Zropbox.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     AuditWebhookUrl = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MaxFilesize = table.Column<ulong>(type: "bigint unsigned", nullable: false),
+                    DefaultShareDurationHours = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,7 +39,8 @@ namespace Zropbox.Migrations
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TokenHash = table.Column<byte[]>(type: "longblob", nullable: false),
-                    TokenSalt = table.Column<byte[]>(type: "longblob", nullable: false)
+                    TokenSalt = table.Column<byte[]>(type: "longblob", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,11 +60,18 @@ namespace Zropbox.Migrations
                     Size = table.Column<int>(type: "int", nullable: false),
                     UploadedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    ParentId = table.Column<int>(type: "int", nullable: true),
                     IsPublic = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CDNEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CDNEntries_CDNEntries_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "CDNEntries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CDNEntries_Users_UserId",
                         column: x => x.UserId,
@@ -72,7 +82,7 @@ namespace Zropbox.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CDNTEmpEntries",
+                name: "CDNTempEntries",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -84,9 +94,9 @@ namespace Zropbox.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CDNTEmpEntries", x => x.Id);
+                    table.PrimaryKey("PK_CDNTempEntries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CDNTEmpEntries_CDNEntries_EntryId",
+                        name: "FK_CDNTempEntries_CDNEntries_EntryId",
                         column: x => x.EntryId,
                         principalTable: "CDNEntries",
                         principalColumn: "Id",
@@ -95,13 +105,18 @@ namespace Zropbox.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CDNEntries_ParentId",
+                table: "CDNEntries",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CDNEntries_UserId",
                 table: "CDNEntries",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CDNTEmpEntries_EntryId",
-                table: "CDNTEmpEntries",
+                name: "IX_CDNTempEntries_EntryId",
+                table: "CDNTempEntries",
                 column: "EntryId",
                 unique: true);
         }
@@ -112,7 +127,7 @@ namespace Zropbox.Migrations
                 name: "AppSettings");
 
             migrationBuilder.DropTable(
-                name: "CDNTEmpEntries");
+                name: "CDNTempEntries");
 
             migrationBuilder.DropTable(
                 name: "CDNEntries");

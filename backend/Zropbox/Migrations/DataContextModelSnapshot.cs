@@ -29,6 +29,12 @@ namespace Zropbox.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("DefaultShareDurationHours")
+                        .HasColumnType("int");
+
+                    b.Property<ulong>("MaxFilesize")
+                        .HasColumnType("bigint unsigned");
+
                     b.HasKey("Id");
 
                     b.ToTable("AppSettings");

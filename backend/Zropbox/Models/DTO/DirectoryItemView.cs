@@ -27,7 +27,7 @@
             }
             else
             {
-                TempLink = $"/share/{entry.CDNTempEntry.Hash}";
+                TempLink = $"{Environment.GetEnvironmentVariable("META_SERVICE_BASE_URL")}/share/{entry.CDNTempEntry.Hash}";
                 TempLinkUntil = entry.CDNTempEntry.ValidUntil;
             }
             Size = entry.Size;

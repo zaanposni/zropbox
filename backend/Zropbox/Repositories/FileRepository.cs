@@ -90,7 +90,7 @@ namespace Zropbox.Repositories
                 }
             }
 
-            CDNEntry newEntry = new CDNEntry
+            CDNEntry newEntry = new()
             {
                 Name = fileName,
                 IsDir = false,
