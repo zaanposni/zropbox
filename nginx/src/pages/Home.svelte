@@ -73,7 +73,7 @@
             <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={$currentDirectory?.loading} directoryStore={currentDirectory} />
         </div>
 
-        <!-- TODO: Footer -->
+        <!-- Footer -->
         {#if $currentDirectory?.content?.items?.length}
             <div class="greyed-text pl-2">
                 {$currentDirectory?.content?.items?.length} items

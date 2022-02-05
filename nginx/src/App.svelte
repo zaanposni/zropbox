@@ -9,6 +9,7 @@
   import UploadDialog from "./components/UploadDialog.svelte";
   import { SvelteToast } from '@zerodevx/svelte-toast'
   import CreateDirectoryDialog from "./components/CreateDirectoryDialog.svelte";
+  import ShareEntryDialog from "./components/ShareEntryDialog.svelte";
 
   addMessages("en", en);
   addMessages("en-US", en);
@@ -34,6 +35,7 @@
     <ConfirmDialog />
     <UploadDialog />
     <CreateDirectoryDialog />
+    <ShareEntryDialog />
     {#if $isLoggedIn}
       <Home></Home>
     {:else}

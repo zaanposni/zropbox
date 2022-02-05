@@ -13,6 +13,7 @@
     import httpClient from "../utils/httpClient";
     import { toastSuccess, toastError } from "../utils/toast";
     import { getIconBasedOnName } from "../utils/fileIcon";
+import { shareEntryDialog, showShareEntryDialog } from "../stores/shareEntry";
 
     const eventDispatcher = createEventDispatcher();
 
@@ -79,6 +80,40 @@
             console.error(error);
         });
     }
+
+    function shareItem(item: IDirectoryEntry) {
+        if (item.loading) {
+            return;
+        }
+
+        if (item.tempLink) {
+            shareEntryDialog.set({
+                id: 0,
+                entryId: item.id,
+                hash: "",
+                url: item.tempLink,
+                validUntil: item.tempLinkUntil
+            });
+            showShareEntryDialog.set(true);
+        } else {
+            setItemLoading(item.id, true);
+            let loadTemp = httpClient({});
+            loadTemp.post(`/temp/${item.id}`, {}, (response) => {
+                shareEntryDialog.set({
+                    id: response.id,
+                    entryId: item.id,
+                    hash: response.hash,
+                    url: response.url,
+                    validUntil: response.validUntil
+                });
+                showShareEntryDialog.set(true);
+                setItemLoading(item.id, false);
+            }, () => {
+                toastError("Failed to create temporary link");
+                setItemLoading(item.id, false);
+            });
+        }
+    }
 </script>
 
 <Card>
@@ -131,7 +166,7 @@
                             </a>
                             <!-- Action buttons -->
                             <div class="flex flex-row shrink-0">
-                                <IconButton class="material-icons px-0" on:click={() => { console.log("share", item.id) }} readonly={item.loading}>share</IconButton>
+                                <IconButton class="material-icons px-0" on:click={() => shareItem(item)} readonly={item.loading}>share</IconButton>
                                 <IconButton toggle pressed={item.isPublic} class="material-icons px-0" on:click={() => changePublicStatusItem(item)} readonly={item.loading}>
                                     <Icon class="material-icons" on>lock_open</Icon>
                                     <Icon class="material-icons">lock</Icon>

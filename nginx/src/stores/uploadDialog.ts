@@ -4,4 +4,4 @@ import type { IUploadDialogEntry } from '../models/IUploadDialogEntry';
 
 export const showUploadDialog: Writable<boolean> = writable(false);
 export const uploadDialog: Writable<IUploadDialogEntry> = writable(null);
-export let uploadDialogReturnFunc: Writable<(e: CustomEvent<{ action: string }>) => void> = writable(null);
+export const uploadDialogReturnFunc: Writable<(e: CustomEvent<{ action: string }>) => void> = writable(null);
