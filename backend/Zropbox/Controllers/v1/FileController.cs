@@ -5,7 +5,7 @@ using Zropbox.Repositories;
 using Zropbox.Exceptions;
 
 
-namespace Zropbox.Controllers.v1
+namespace Zropbox.Controllers
 {
     [Route("api/files")]
     [ApiController]
