@@ -14,7 +14,7 @@ namespace Zropbox.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<CDNEntry> CDNEntries { get; set; }
-        public DbSet<CDNTempEntry> CDNTEmpEntries { get; set; }
+        public DbSet<CDNTempEntry> CDNTempEntries { get; set; }
         public DbSet<AppSetting> AppSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
