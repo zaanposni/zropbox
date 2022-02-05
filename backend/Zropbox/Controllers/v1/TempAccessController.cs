@@ -25,7 +25,7 @@ namespace Zropbox.Controllers
             return File(fileInfo.FileContent, fileInfo.ContentType);
         }
 
-        [HttpPost("temp/{id}")]
+        [HttpPost("api/temp/{entryId}")]
         [Authorize]
         public async Task<IActionResult> CreateTempAccess([FromRoute] int entryId)
         {
@@ -48,7 +48,7 @@ namespace Zropbox.Controllers
             return Ok(new TempEntryView(tempEntry));
         }
 
-        [HttpPut("temp/{id}")]
+        [HttpPut("api/temp/{entryId}")]
         [Authorize]
         public async Task<IActionResult> RenewTempAccess([FromRoute] int entryId)
         {
@@ -71,7 +71,7 @@ namespace Zropbox.Controllers
             return Ok(new TempEntryView(tempEntry));
         }
 
-        [HttpDelete("temp/{entryId}")]
+        [HttpDelete("api/temp/{entryId}")]
         [Authorize]
         public async Task<IActionResult> RemoveTempAccess([FromRoute] int entryId)
         {

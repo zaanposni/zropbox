@@ -8,7 +8,7 @@
         public bool IsFile { get; set; }
         public bool IsRoot { get; set; }
         public string TempLink { get; set; }
-        public DateTime TempLinkUntil { get; set; }
+        public DateTime? TempLinkUntil { get; set; }
         public int Size { get; set; }
         public DateTime UploadedAt { get; set; }
         public string UploadedBy { get; set; }
@@ -21,9 +21,13 @@
             IsDir = entry.IsDir;
             IsFile = !entry.IsDir;
             IsRoot = entry.Parent == null;
-            if (entry.CDNTempEntry != null)
+            if (entry.CDNTempEntry == null)
             {
-                TempLink = entry.CDNTempEntry.Hash;
+                TempLinkUntil = null;
+            }
+            else
+            {
+                TempLink = $"/share/{entry.CDNTempEntry.Hash}";
                 TempLinkUntil = entry.CDNTempEntry.ValidUntil;
             }
             Size = entry.Size;
