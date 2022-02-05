@@ -54,7 +54,7 @@ import httpClient from '../utils/httpClient';
                         helperLine$style="width: 100%;">
                     </Textfield>
                 </div>
-                <IconButton class="material-icons" on:click={copyToClipboard}>content_copy</IconButton>
+                <IconButton class="material-icons" title="copy" on:click={copyToClipboard}>content_copy</IconButton>
             </div>
             <div class="flex flex-row items-center grow">
                 <div class="mr-2">Valid until:</div>
