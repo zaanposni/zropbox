@@ -65,12 +65,16 @@
 
         <!-- Hierarchy -->
         <div class="card-container mb-4">
-            <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}} on:fileSelected={onFileSelected} />
+            <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}}
+                       on:fileSelected={onFileSelected} />
         </div>
 
         <!-- Explorer -->
         <div class="card-container">
-            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}} loading={$currentDirectory?.loading} directoryStore={currentDirectory} />
+            <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}}
+                      on:fileSelected={onFileSelected}
+                      loading={$currentDirectory?.loading}
+                      directoryStore={currentDirectory} />
         </div>
 
         <!-- Footer -->

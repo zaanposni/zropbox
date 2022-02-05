@@ -13,10 +13,12 @@
     import httpClient from "../utils/httpClient";
     import { toastSuccess, toastError } from "../utils/toast";
     import { getIconBasedOnName } from "../utils/fileIcon";
-import { shareEntryDialog, showShareEntryDialog } from "../stores/shareEntry";
+    import { shareEntryDialog, showShareEntryDialog } from "../stores/shareEntry";
 
     const eventDispatcher = createEventDispatcher();
 
+    let fileInput;
+    let additionalClasses = "";
     export let directoryStore: IHttpClient<ILoadingContent<IDirectoryView>>;
     export let loading: boolean = false;
 
@@ -114,6 +116,25 @@ import { shareEntryDialog, showShareEntryDialog } from "../stores/shareEntry";
             });
         }
     }
+
+    function onDrop(e: any) {
+        e.preventDefault();
+        additionalClasses = "";
+        if(e?.dataTransfer?.files) {
+            eventDispatcher('fileSelected', {
+                target: {
+                    files: e.dataTransfer.files
+                }
+            });
+        }
+    }
+    function onDragOver(e: any) {
+        e.preventDefault();
+        additionalClasses = "primary";
+    }
+    function onDragLeave(e: any) {
+        additionalClasses = "";
+    }
 </script>
 
 <Card>
@@ -181,9 +202,23 @@ import { shareEntryDialog, showShareEntryDialog } from "../stores/shareEntry";
                 {#if loading}
                     <LinearProgress indeterminate />
                 {:else}
-                    <div>
-                        <!-- TODO: add dropzone for new files -->
-                        No items found :(
+                    <div class="flex grow h-60" on:click={() => fileInput.click()}>
+                        <div class="flex grow border-2 border-gray-500 border-dashed justify-center items-center cursor-pointer p-2"
+                             on:drop={onDrop}
+                             on:dragover={onDragOver}
+                             on:dragleave={onDragLeave}>
+                            <div>
+                                <Icon class="material-icons {additionalClasses}" style="font-size: 100px"> upload </Icon>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="invisible">
+                        <input style="display:none"
+                               type="file"
+                               accept="*"
+                               id="fileUpload"
+                               on:change={(e) => eventDispatcher('fileSelected', e)}
+                               bind:this={fileInput}/>
                     </div>
                 {/if}
           {/if}
