@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { Writable } from "svelte/store";
+    import { writable } from "svelte/store";
     import Explorer from "../components/Explorer.svelte";
     import Hierarchy from "../components/Hierarchy.svelte";
     import Quicksearch from "../components/Quicksearch.svelte";
@@ -9,11 +11,17 @@
 
     // fillDummyData();
 
+    let searchActive: Writable<boolean> = writable(false);
+
     function changeDirectory(id: number) {
         if (id === $currentDirectory?.content?.currentItemId || $currentDirectory?.loading === true) {
              return;
         }
         currentDirectory.get(`/directory/${id}`);
+    }
+
+    function reload() {
+        currentDirectory.get(`/directory/${$currentDirectory?.content?.currentItemId ?? 0}`);
     }
 
     const onFileSelected = (e) => {
@@ -53,14 +61,35 @@
         }
     }
 
+    function onExitClickSearch(e) {
+        if ($searchActive && !hasSomeParentTheId(e.target, "quicksearch-container")) {
+            reload();
+            searchActive.set(false);
+        }
+    }
+
+    // returns true if the element or one of its parents has the id idname
+    function hasSomeParentTheId(element, idname) {
+        if (element.id === idname) return true;
+        return element.parentNode && hasSomeParentTheId(element.parentNode, idname);
+    }
+
     currentDirectory.get('/directory/0');
 </script>
 
-<div class="flex flex-col grow items-center w-full h-full">
-    <div class="w-3/5">
+<style>
+    .search-active > div:not(#quicksearch-container) {
+        filter: blur(3px);
+        opacity: 40%;
+        pointer-events: none;
+    }
+</style>
+
+<div class="flex flex-col grow items-center w-full h-full" on:click={onExitClickSearch}>
+    <div class="w-3/5" class:search-active={$searchActive}>
         <!-- Search box -->
-        <div class="card-container mb-4">
-            <Quicksearch />
+        <div class="card-container mb-4 dawdawdawd" id="quicksearch-container">
+            <Quicksearch bind:searchActive={searchActive} />
         </div>
 
         <!-- Hierarchy -->
@@ -78,10 +107,16 @@
         </div>
 
         <!-- Footer -->
-        {#if $currentDirectory?.content?.items?.length}
-            <div class="greyed-text pl-2">
+        <div class="greyed-text pl-2">
+            {#if $currentDirectory?.content?.items?.length > 1}
                 {$currentDirectory?.content?.items?.length} items
-            </div>
-        {/if}
+            {/if}
+            {#if $currentDirectory?.content?.items?.length == 1}
+                {$currentDirectory?.content?.items?.length} item
+            {/if}
+            {#if $currentDirectory?.content?.items?.length == 0}
+                No items found
+            {/if}
+        </div>
     </div>
 </div>

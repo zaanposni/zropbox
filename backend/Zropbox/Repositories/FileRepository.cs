@@ -1,6 +1,8 @@
 ﻿using Zropbox.Exceptions;
 using Zropbox.Models;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
+using FuzzySharp;
 
 namespace Zropbox.Repositories
 {
@@ -151,6 +153,18 @@ namespace Zropbox.Repositories
             await Context.SaveChangesAsync();
 
             return newEntry;
+        }
+
+        public async Task<List<CDNEntry>> ExecuteFuzzySearch(User user, string search)
+        {
+            List<CDNEntry> entries = await Context.CDNEntries.Include(x => x.Parent).Include(x => x.UploadedBy).AsQueryable().Where(x => x.UploadedBy == user && ! x.IsDir).ToListAsync();
+
+            string[] entriesMapped = entries.Select(x => x.Name).ToArray();
+
+            // https://github.com/JakeBayer/FuzzySharp#process
+            var searchResults = Process.ExtractTop(search, entriesMapped, cutoff: 40, limit: 50);
+
+            return searchResults.Select(x => entries[x.Index]).ToList();
         }
     }
 }

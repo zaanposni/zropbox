@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Zropbox.Models;
 using Zropbox.Repositories;
 using Zropbox.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Zropbox.Controllers
 {
@@ -66,6 +67,17 @@ namespace Zropbox.Controllers
                 Hierarchy = parents.Select(x => new HierarchyItemView(x)).ToList(),
                 Items = items.Select(x => new DirectoryItemView(x)).ToList()
             });
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> ExecuteSearch([FromQuery][Required] string search)
+        {
+            await ValidateLogin();
+            User currentUser = await GetCurrentUser();
+
+            List<CDNEntry> entries = await FileRepository.CreateDefault(ServiceProvider).ExecuteFuzzySearch(currentUser, search);
+
+            return Ok(entries.Select(x => new DirectoryItemView(x)).ToList());
         }
 
         [HttpPost("{id}")]
