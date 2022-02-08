@@ -3,23 +3,26 @@
     import { Link } from "svelte-navigator";
     import { isAdmin, loggedInUser, loginName } from "../stores/authStore";
     import Menu, { MenuComponentDev } from "@smui/menu";
-    import { Anchor } from '@smui/menu-surface';
     import List, { Item, Text, Separator, Graphic } from "@smui/list";
     import IconButton from "@smui/icon-button";
 	import MediaQuery from "../components/MediaQuery.svelte";
     import { useNavigate } from "svelte-navigator";
+    import delete_cookie from "../utils/deleteCookie";
 
     const navigate = useNavigate();
 
     let userMenu: MenuComponentDev;
-    let anchor: HTMLDivElement;
-    let anchorClasses: { [k: string]: boolean } = {};
 
     function changePassword() {
         console.log("change password");
     }
     function logout() {
-        console.log("logout");
+        delete_cookie("zropbox_access_token");
+        loggedInUser.update((e) => {
+            e.content = null;
+            return e;
+        });
+        navigate("/");
     }
     function redirect(url: string) {
         navigate(url);
