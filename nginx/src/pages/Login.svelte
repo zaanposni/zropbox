@@ -17,9 +17,7 @@ import { toastError } from "../utils/toast";
     let username: string = "";
     let password: string = "";
 
-    let invalidUsername = false;
-    let invalidPassword = false;
-    $: disabled = !username || !password || invalidUsername || invalidPassword || loggingInProgress;
+    $: disabled = ((username?.trim() ?? "") === "") || ((password?.trim() ?? "") === "") || loggingInProgress;
 
     let loggingInProgress: boolean = false;
     let loginStore = http({});
@@ -44,6 +42,10 @@ import { toastError } from "../utils/toast";
         });
     }
 
+    const onKeyPress = e => {
+        if (e.charCode === 13 && !disabled) login();
+    };
+
     // TODO: if cookie
     if (getCookie('zropbox_access_token')) {
         loggedInUser.get('/auth', () => {
@@ -61,14 +63,14 @@ import { toastError } from "../utils/toast";
                 <div class="text-5xl font-medium leading-tight text-center">
                     {$_('Login.Title')}
                 </div>
-                <div class="p-8">
+                <div class="p-8" on:keypress={onKeyPress}>
                     <div class="p-2">
-                        <Textfield bind:value={username} label="{$_('Login.Username')}" required type="text" bind:invalid={invalidUsername} updateInvalid>
+                        <Textfield bind:value={username} label="{$_('Login.Username')}" required type="text">
                         <Icon class="material-icons mr-2" slot="leadingIcon">person</Icon>
                         </Textfield>
                     </div>
                     <div class="p-2">
-                        <Textfield bind:value={password} label="{$_('Login.Password')}" required type="password" bind:invalid={invalidPassword} updateInvalid>
+                        <Textfield bind:value={password} label="{$_('Login.Password')}" required type="password">
                         <Icon class="material-icons mr-2" slot="leadingIcon">lock</Icon>
                         </Textfield>
                     </div>
