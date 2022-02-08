@@ -46,7 +46,7 @@
                     {/if}
                 </nav>
             </header>
-            <main>
+            <main class="flex flex-col flex-grow w-full h-full">
                 <div class="mb-4" />
                 <Route path="/">
                     <Login />
