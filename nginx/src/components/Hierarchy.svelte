@@ -9,7 +9,7 @@
     import type { IHierarchy } from "../models/IHierarchyEntry";
     import { createDirectoryDialog, createDirectoryDialogReturnFunc, showCreateDirectoryDialog } from "../stores/createDirectoryDialog";
     import httpClient from "../utils/httpClient";
-import { toastError, toastSuccess } from "../utils/toast";
+    import { toastError, toastSuccess } from "../utils/toast";
 
     let fileinput;
     let addMenu: MenuComponentDev;

@@ -1,71 +1,88 @@
 <script lang="ts">
-  import Card, { Content, Actions } from "@smui/card";
-  import Button from "@smui/button";
-  import { Icon } from "@smui/icon-button";
-  import Textfield from "@smui/textfield";
-  import LinearProgress from '@smui/linear-progress';
-  import { loggedInUser } from "../stores/authStore";
-  import { _ } from "svelte-i18n";
-  import http from "../utils/httpClient";
-  import setCookie from "../utils/setCookie";
+    import Card, { Content, Actions } from "@smui/card";
+    import Button from "@smui/button";
+    import { Icon } from "@smui/icon-button";
+    import Textfield from "@smui/textfield";
+    import LinearProgress from '@smui/linear-progress';
+    import { loggedInUser } from "../stores/authStore";
+    import { _ } from "svelte-i18n";
+    import http from "../utils/httpClient";
+    import setCookie from "../utils/setCookie";
+    import { useNavigate } from "svelte-navigator";
+    import getCookie from "../utils/getCookie";
+import { toastError } from "../utils/toast";
 
-  let username: string = "";
-  let password: string = "";
+    const navigate = useNavigate();
 
-  let invalidUsername = false;
-  let invalidPassword = false;
-  $: disabled = !username || !password || invalidUsername || invalidPassword || loggingInProgress;
+    let username: string = "";
+    let password: string = "";
 
-  let loggingInProgress: boolean = false;
-  let loginStore = http({});
+    let invalidUsername = false;
+    let invalidPassword = false;
+    $: disabled = !username || !password || invalidUsername || invalidPassword || loggingInProgress;
 
-  function login() {
-      loggingInProgress = true;
+    let loggingInProgress: boolean = false;
+    let loginStore = http({});
 
-      const data = {
-          username,
-          password
-      };
+    function login() {
+        loggingInProgress = true;
 
-      loginStore.post('/auth/login', data, (response) => {
-          loggingInProgress = false;
-          setCookie('zropbox_access_token', response.token, 1);
-          loggedInUser.get('/auth');
-      }, () => {
-          loggingInProgress = false
-      });
-  }
+        const data = {
+            username,
+            password
+        };
+
+        loginStore.post('/auth/login', data, (response) => {
+            loggingInProgress = false;
+            setCookie('zropbox_access_token', response.token, 1);
+            loggedInUser.get('/auth', () => {
+                navigate('/home');
+            });
+        }, () => {
+            loggingInProgress = false;
+            toastError('Login failed');
+        });
+    }
+
+    // TODO: if cookie
+    if (getCookie('zropbox_access_token')) {
+        loggedInUser.get('/auth', () => {
+            navigate('/home');
+        }, () => {
+            toastError('You have been logged out');
+        });
+    }
 </script>
 
 <div class="flex flex-col grow justify-center items-center w-full h-full">
-  <div class="card-container">
-    <Card>
-      <Content class="flex flex-col justify-end p-8">
-        <div class="text-5xl font-medium leading-tight text-center">
-            {$_('Login.Title')}
-        </div>
-        <div class="p-8">
-          <div class="p-2">
-            <Textfield bind:value={username} label="{$_('Login.Username')}" required type="text" bind:invalid={invalidUsername} updateInvalid>
-              <Icon class="material-icons mr-2" slot="leadingIcon">person</Icon>
-            </Textfield>
-          </div>
-          <div class="p-2">
-            <Textfield bind:value={password} label="{$_('Login.Password')}" required type="password" bind:invalid={invalidPassword} updateInvalid>
-              <Icon class="material-icons mr-2" slot="leadingIcon">lock</Icon>
-            </Textfield>
-          </div>
-        </div>
-        <div class="text-sm font-medium leading-tight text-center">
-            {$_('Login.Guidelines')}
-        </div>
-      </Content>
-      <Actions class="flex justify-end">
-        <Button {disabled} type="submit" on:click={login}>
-          <i class="material-icons" aria-hidden="true">arrow_forward</i>{$_('Login.LoginButton')}
-        </Button>
-      </Actions>
-      <LinearProgress indeterminate closed={!loggingInProgress}/>
-    </Card>
-  </div>
+    <div class="card-container">
+        <Card>
+            <Content class="flex flex-col justify-end p-8">
+                <div class="text-5xl font-medium leading-tight text-center">
+                    {$_('Login.Title')}
+                </div>
+                <div class="p-8">
+                    <div class="p-2">
+                        <Textfield bind:value={username} label="{$_('Login.Username')}" required type="text" bind:invalid={invalidUsername} updateInvalid>
+                        <Icon class="material-icons mr-2" slot="leadingIcon">person</Icon>
+                        </Textfield>
+                    </div>
+                    <div class="p-2">
+                        <Textfield bind:value={password} label="{$_('Login.Password')}" required type="password" bind:invalid={invalidPassword} updateInvalid>
+                        <Icon class="material-icons mr-2" slot="leadingIcon">lock</Icon>
+                        </Textfield>
+                    </div>
+                </div>
+                <div class="text-sm font-medium leading-tight text-center">
+                    {$_('Login.Guidelines')}
+                </div>
+            </Content>
+            <Actions class="flex justify-end">
+                <Button {disabled} type="submit" on:click={login}>
+                    <i class="material-icons" aria-hidden="true">arrow_forward</i>{$_('Login.LoginButton')}
+                </Button>
+            </Actions>
+            <LinearProgress indeterminate closed={!loggingInProgress}/>
+        </Card>
+    </div>
 </div>

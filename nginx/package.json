@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
+    "start": "sirv public --no-clear -s",
     "smuithemestuff": "npx smui-theme compile public/build/smui.css -i src/theme",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
@@ -37,6 +37,7 @@
     "postcss": "^8.4.5",
     "sirv-cli": "^1.0.0",
     "svelte-i18n": "^3.3.13",
-    "svelte-material-ui": "^6.0.0-beta.13"
+    "svelte-material-ui": "^6.0.0-beta.13",
+    "svelte-navigator": "^3.1.5"
   }
 }
