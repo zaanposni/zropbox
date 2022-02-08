@@ -10,7 +10,7 @@
     import setCookie from "../utils/setCookie";
     import { useNavigate } from "svelte-navigator";
     import getCookie from "../utils/getCookie";
-import { toastError } from "../utils/toast";
+    import { toastError } from "../utils/toast";
 
     const navigate = useNavigate();
 

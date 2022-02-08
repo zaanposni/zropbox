@@ -6,7 +6,7 @@
     import de from "./i18n/de.json";
     import Login from "./pages/Login.svelte";
     import Home from "./pages/Home.svelte";
-    import { isLoggedIn, loggedInUser } from "./stores/authStore";
+    import { isLoggedIn } from "./stores/authStore";
     import ConfirmDialog from "./components/ConfirmDialog.svelte";
     import UploadDialog from "./components/UploadDialog.svelte";
     import { SvelteToast } from '@zerodevx/svelte-toast'
@@ -14,6 +14,7 @@
     import ShareEntryDialog from "./components/ShareEntryDialog.svelte";
     import Header from "./pages/Header.svelte";
     import PrivateRoute from './routes/PrivateRoute.svelte';
+    import UserManagement from './pages/UserManagement.svelte';
 
     addMessages("en", en);
     addMessages("en-US", en);
@@ -56,6 +57,9 @@
                 </PrivateRoute>
                 <PrivateRoute path="settings" let:location>
                     <AppSettings />
+                </PrivateRoute>
+                <PrivateRoute path="users" let:location>
+                    <UserManagement />
                 </PrivateRoute>
             </main>
         </div>
