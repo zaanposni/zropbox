@@ -7,9 +7,6 @@ RUN node -v
 RUN npm -v
 
 RUN npm install
-# RUN npm rebuild node-sass --force
-RUN mkdir -p src/theme
-RUN npx smui-theme compile public/build/smui.css -i src/theme
 RUN npm run build
 
 FROM nginx:alpine
