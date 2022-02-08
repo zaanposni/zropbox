@@ -73,9 +73,9 @@ import { toastError } from "../utils/toast";
                         </Textfield>
                     </div>
                 </div>
-                <div class="text-sm font-medium leading-tight text-center">
+                <a class="text-sm font-medium leading-tight text-center" href="/tos.html" target="_blank">
                     {$_('Login.Guidelines')}
-                </div>
+                </a>
             </Content>
             <Actions class="flex justify-end">
                 <Button {disabled} type="submit" on:click={login}>
