@@ -62,13 +62,16 @@ namespace Zropbox.Controllers
             try
             {
                 User user = await UserRepository.CreateDefault(ServiceProvider).GetUser(HttpContext.User.Identity.Name);
+                if (user == null)
+                {
+                    throw new UnauthorizedException();
+                }
                 return user;
             }
             catch (Exception)
             {
                 throw new UnauthorizedException();
             }
-
         }
     }
 }

@@ -19,6 +19,7 @@ namespace Zropbox.Controllers
         [Authorize]
         public async Task<ActionResult> Get()
         {
+            await ValidateLogin();
             return Ok(new UserView(await GetCurrentUser()));
         }
 
