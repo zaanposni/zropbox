@@ -87,6 +87,11 @@ using (var scope = app.Services.CreateScope())
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         string password = new(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray());
 
+        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PREF_INIT_PASSWORD")))
+        {
+            password = Environment.GetEnvironmentVariable("PREF_INIT_PASSWORD");
+        }
+
         await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser("admin", password, true);
 
         Console.WriteLine($"==================================================================================");

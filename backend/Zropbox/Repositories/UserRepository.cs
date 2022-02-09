@@ -31,6 +31,11 @@ namespace Zropbox.Repositories
             return user;
         }
 
+        public async Task<List<User>> GetUsers()
+        {
+            return await Context.Users.ToListAsync();
+        }
+
         /// <summary>
         /// Register a new user.
         /// </summary>

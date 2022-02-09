@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Zropbox.Exceptions;
 using Zropbox.Models;
 using Zropbox.Repositories;
 
@@ -23,12 +24,22 @@ namespace Zropbox.Controllers
             return Ok(new UserView(await GetCurrentUser()));
         }
 
-        [Authorize]
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserLogin login)
+        [HttpPut("password")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserRegister dto)
         {
-            await ValidateLogin(true);
-            return Ok(new UserView(await UserRepository.CreateDefault(ServiceProvider).RegisterUser(login.Username, login.Password, false)));
+            await ValidateLogin();
+            User currentUser = await GetCurrentUser();
+
+            if (currentUser.Name != dto.Username)
+            {
+                throw new UnauthorizedException();
+            }
+
+            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
+
+            User user = await repo.GetUser(dto.Username);
+
+            return Ok(new UserView(await repo.UpdatePassword(dto.Username, dto.Password)));
         }
 
         [AllowAnonymous]
