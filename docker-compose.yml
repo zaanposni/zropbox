@@ -1,5 +1,9 @@
 version: '2.2'
 
+volumes:
+  mysql:
+  filehost:
+
 services:
   db:
     container_name: zropbox_db
@@ -54,3 +58,7 @@ services:
       - "127.0.0.1:5620:80"
     networks:
     - appnetwork
+
+networks:
+  appnetwork:
+    driver: bridge
