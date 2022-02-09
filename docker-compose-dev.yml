@@ -42,9 +42,10 @@ services:
       - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_HOST=db
       - META_SERVICE_BASE_URL=${META_SERVICE_BASE_URL}
-      - ABSOLUTE_PATH_TO_FILE_UPLOAD=/filehost/
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ABSOLUTE_PATH_TO_FILE_UPLOAD=${ABSOLUTE_PATH_TO_FILE_UPLOAD}
       - JWT_KEY=${JWT_KEY}
+      - LOGIN_DURATION=${LOGIN_DURATION}
+      - ASPNETCORE_ENVIRONMENT=Development
       - ENABLE_CORS=true
     networks:
       - appnetwork

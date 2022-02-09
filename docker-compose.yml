@@ -37,8 +37,9 @@ services:
       - MYSQL_PORT=${MYSQL_PORT}
       - MYSQL_HOST=db
       - META_SERVICE_BASE_URL=${META_SERVICE_BASE_URL}
-      - ABSOLUTE_PATH_TO_FILE_UPLOAD=/filehost/
+      - ABSOLUTE_PATH_TO_FILE_UPLOAD=${ABSOLUTE_PATH_TO_FILE_UPLOAD}
       - JWT_KEY=${JWT_KEY}
+      - LOGIN_DURATION=${LOGIN_DURATION}
     networks:
       - appnetwork
     volumes:

@@ -43,7 +43,7 @@ namespace Zropbox.Controllers
                 return BadRequest();
             }
 
-            CDNTempEntry tempEntry = await TempEntryRepository.CreateDefault(ServiceProvider).CreateTempAccess(entry, DateTime.UtcNow.AddDays(1));
+            CDNTempEntry tempEntry = await TempEntryRepository.CreateDefault(ServiceProvider).CreateTempAccess(entry, DateTime.UtcNow.AddHours(Config.GetDefaultShareDurationHours()));
 
             return Ok(new TempEntryView(tempEntry));
         }
@@ -66,7 +66,7 @@ namespace Zropbox.Controllers
                 return BadRequest();
             }
 
-            CDNTempEntry tempEntry = await TempEntryRepository.CreateDefault(ServiceProvider).RenewTempEntry(entryId, DateTime.UtcNow.AddDays(1));
+            CDNTempEntry tempEntry = await TempEntryRepository.CreateDefault(ServiceProvider).RenewTempEntry(entryId, DateTime.UtcNow.AddHours(Config.GetDefaultShareDurationHours()));
 
             return Ok(new TempEntryView(tempEntry));
         }

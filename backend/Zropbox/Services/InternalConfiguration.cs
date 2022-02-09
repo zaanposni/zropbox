@@ -5,30 +5,41 @@ namespace Zropbox.Services
 {
     public class InternalConfiguration
     {
-        private string _auditLogWebhookUrl;
-        private string _jwtKey;
-        private string _fileRootPath;
-        private string _serviceBaseUrl;
-        private ulong _maxFilesize;
-        private int _defaultShareDurationHours;
+        private string _auditLogWebhookUrl = string.Empty;
+        private string _jwtKey = string.Empty;
+        private string _fileRootPath = string.Empty;
+        private string _serviceBaseUrl = string.Empty;
+        private ulong _maxFilesize = ulong.MaxValue;
+        private int _defaultShareDurationHours = 24;
+        private int _loginDurationHours = 24;
 
-        public InternalConfiguration()
-        {
-            _auditLogWebhookUrl = string.Empty;
-            _jwtKey = string.Empty;
-            _serviceBaseUrl = string.Empty;
-            _maxFilesize = ulong.MaxValue;
-            _defaultShareDurationHours = 24;
-        }
+        public InternalConfiguration() { }
 
         public void Init()
         {
-            _jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
-            if (_jwtKey == null) throw new InvalidConfigurationException("JWT_KEY not found.");
-            _fileRootPath = Environment.GetEnvironmentVariable("ABSOLUTE_PATH_TO_FILE_UPLOAD");
-            if (_fileRootPath == null) throw new InvalidConfigurationException("ABSOLUTE_PATH_TO_FILE_UPLOAD not found.");
-            _serviceBaseUrl = Environment.GetEnvironmentVariable("META_SERVICE_BASE_URL");
-            if (_serviceBaseUrl == null) throw new InvalidConfigurationException("META_SERVICE_BASE_URL not found.");
+            string? value;
+            if (string.IsNullOrEmpty(value = Environment.GetEnvironmentVariable("JWT_KEY")))
+            {
+                throw new InvalidConfigurationException("JWT_KEY not found.");
+            }
+            _jwtKey = value;
+
+            if (string.IsNullOrEmpty(value = Environment.GetEnvironmentVariable("ABSOLUTE_PATH_TO_FILE_UPLOAD")))
+            {
+                throw new InvalidConfigurationException("ABSOLUTE_PATH_TO_FILE_UPLOAD not found.");
+            }
+            _fileRootPath = value;
+
+            if (string.IsNullOrEmpty(value = Environment.GetEnvironmentVariable("META_SERVICE_BASE_URL")))
+            {
+                throw new InvalidConfigurationException("META_SERVICE_BASE_URL not found.");
+            }
+            _serviceBaseUrl = value;
+
+            if (!int.TryParse(Environment.GetEnvironmentVariable("LOGIN_DURATION"), out _loginDurationHours))
+            {
+                _loginDurationHours = 24;
+            }
         }
 
         public void ApplyAppSetting(AppSetting setting)
@@ -58,14 +69,19 @@ namespace Zropbox.Services
             return _serviceBaseUrl;
         }
 
-        public ulong GetMaxFilesize()
+        public long GetMaxFilesize()
         {
-            return _maxFilesize;
+            return (long)_maxFilesize;
         }
 
         public int GetDefaultShareDurationHours()
         {
             return _defaultShareDurationHours;
+        }
+
+        public int GetLoginDurationHours()
+        {
+            return _loginDurationHours;
         }
     }
 }

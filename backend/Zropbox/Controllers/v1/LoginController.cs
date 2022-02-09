@@ -74,7 +74,7 @@ namespace Zropbox.Controllers
             var token = new JwtSecurityToken("cdn",
               "cdn",
               claims,
-              expires: DateTime.Now.AddHours(6),
+              expires: DateTime.Now.AddHours(Config.GetLoginDurationHours()),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
