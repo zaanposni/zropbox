@@ -44,8 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "cdn",
-            ValidAudience = "cdn",
+            ValidIssuer = "zropbox",
+            ValidAudience = "zropbox",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtToken))
         };
     });

@@ -71,8 +71,8 @@ namespace Zropbox.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var token = new JwtSecurityToken("cdn",
-              "cdn",
+            var token = new JwtSecurityToken("zropbox",
+              "zropbox",
               claims,
               expires: DateTime.Now.AddHours(Config.GetLoginDurationHours()),
               signingCredentials: credentials);
