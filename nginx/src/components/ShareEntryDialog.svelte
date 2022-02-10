@@ -7,7 +7,7 @@
     import Textfield from '@smui/textfield';
     import { toastError, toastSuccess } from '../utils/toast';
     import DateDisplay from './DateDisplay.svelte';
-import httpClient from '../utils/httpClient';
+    import httpClient from '../utils/httpClient';
 
     function closeHandler(e: CustomEvent<{ action: string }>) {
         showShareEntryDialog.set(false);

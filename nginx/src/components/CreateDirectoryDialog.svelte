@@ -15,6 +15,7 @@
         createDirectoryDialog.update(x => {
             return name;
         });
+        name = "";
         showCreateDirectoryDialog.set(false);
         if ($createDirectoryDialogReturnFunc) {
             $createDirectoryDialogReturnFunc(e);
