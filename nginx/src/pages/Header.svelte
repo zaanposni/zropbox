@@ -8,14 +8,33 @@
 	import MediaQuery from "../components/MediaQuery.svelte";
     import { useNavigate } from "svelte-navigator";
     import delete_cookie from "../utils/deleteCookie";
+    import { changePasswordDialog, changePasswordDialogReturnFunc, showChangePasswordDialog } from "../stores/changePasswordDialog";
+    import httpClient from "../utils/httpClient";
+    import { toastError, toastSuccess } from "../utils/toast";
 
     const navigate = useNavigate();
 
     let userMenu: MenuComponentDev;
 
-    function changePassword() {
-        console.log("change password");
+    function openChangePasswordDialog() {
+        showChangePasswordDialog.set(true);
+        changePasswordDialogReturnFunc.set(changePassword);
     }
+    function changePassword(e) {
+        if (e?.detail?.action === "update") {
+            const passwordUpdate = httpClient({});
+            const data = {
+                username: $loginName,
+                password: $changePasswordDialog
+            }
+            passwordUpdate.put(`/auth/password`, data, () => {
+                toastSuccess("Password changed successfully");
+            }, () => {
+                toastError("Failed to change password");
+            });
+        }
+    }
+
     function logout() {
         delete_cookie("zropbox_access_token");
         loggedInUser.update((e) => {
@@ -24,6 +43,7 @@
         });
         navigate("/");
     }
+
     function redirect(url: string) {
         navigate(url);
     }
@@ -63,7 +83,7 @@
                                 </Item>
                             {/if}
                         </MediaQuery>
-                        <Item on:SMUI:action={changePassword}>
+                        <Item on:SMUI:action={openChangePasswordDialog}>
                             <Graphic class="material-icons mr-2">lock</Graphic>
                             <Text>Change password</Text>
                         </Item>

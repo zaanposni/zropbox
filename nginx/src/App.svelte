@@ -15,6 +15,7 @@
     import Header from "./pages/Header.svelte";
     import PrivateRoute from './routes/PrivateRoute.svelte';
     import UserManagement from './pages/UserManagement.svelte';
+    import ChangePasswordDialog from './components/ChangePasswordDialog.svelte';
 
     addMessages("en", en);
     addMessages("en-US", en);
@@ -38,6 +39,7 @@
     <UploadDialog />
     <CreateDirectoryDialog />
     <ShareEntryDialog />
+    <ChangePasswordDialog />
     <div class="w-full h-full">
         <div class="flex flex-col flex-grow w-full h-full">
             <header>

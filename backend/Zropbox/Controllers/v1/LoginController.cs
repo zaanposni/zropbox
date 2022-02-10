@@ -35,11 +35,7 @@ namespace Zropbox.Controllers
                 throw new UnauthorizedException();
             }
 
-            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
-
-            User user = await repo.GetUser(dto.Username);
-
-            return Ok(new UserView(await repo.UpdatePassword(dto.Username, dto.Password)));
+            return Ok(new UserView(await UserRepository.CreateDefault(ServiceProvider).UpdatePassword(dto.Username, dto.Password)));
         }
 
         [AllowAnonymous]
