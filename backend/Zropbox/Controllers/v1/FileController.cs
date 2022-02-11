@@ -61,7 +61,7 @@ namespace Zropbox.Controllers
                 }
             }
 
-            if (file.File.Length > Config.GetMaxFilesize())
+            if ((ulong)file.File.Length > Config.GetMaxFilesize())
             {
                 return BadRequest();
             }

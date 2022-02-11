@@ -69,9 +69,9 @@ namespace Zropbox.Services
             return _serviceBaseUrl;
         }
 
-        public long GetMaxFilesize()
+        public ulong GetMaxFilesize()
         {
-            return (long)_maxFilesize;
+            return _maxFilesize;
         }
 
         public int GetDefaultShareDurationHours()
