@@ -56,14 +56,25 @@ namespace Zropbox.Controllers
             return Ok();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Delete([FromBody] UserRegister dto)
+        [HttpPut("password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UserRegister dto)
         {
             await ValidateLogin(true);
 
             UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
 
             await repo.UpdatePassword(dto.Username, dto.Password);
+
+            return Ok(new UserView(await repo.GetUser(dto.Username)));
+        }
+
+        [HttpPut("admin")]
+        public async Task<IActionResult> UpdateAdminStatus([FromBody] UserRegister dto)
+        {
+            await ValidateLogin(true);
+
+            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
+
             await repo.UpdateAdminStatus(dto.Username, dto.IsAdmin);
 
             return Ok(new UserView(await repo.GetUser(dto.Username)));
