@@ -13,6 +13,16 @@
     $: invalidName = (name?.trim() ?? "") === "";
     $: invalidPassword = (password?.trim() ?? "") === "";
 
+    const onKeyPress = e => {
+        if (e.charCode === 13 && !invalidName && !invalidPassword) {
+            closeHandler({
+                detail: {
+                    action: "confirm"
+                }
+            } as any);
+        }
+    };
+
     function closeHandler(e: CustomEvent<{ action: string }>) {
         confirmLoginDialog.update(x => {
             x = {
@@ -53,7 +63,7 @@
             <div class="flex flex-row items-center grow">
                 <IconButton class="material-icons">password</IconButton>
                 <div class="grow">
-                    <Textfield bind:value={password}
+                    <Textfield bind:value={password} on:keypress={onKeyPress}
                         required
                         label="Password"
                         type="password"
