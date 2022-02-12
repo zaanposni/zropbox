@@ -35,6 +35,10 @@ a {
   color: theme.$error;
 }
 
+.bg {
+  background-color: theme.$background;
+}
+
 .bg-on-hover:hover {
   background-color: theme.$background;
 }

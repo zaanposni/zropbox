@@ -18,7 +18,7 @@
     const eventDispatcher = createEventDispatcher();
 
     let fileInput;
-    let additionalClasses = "";
+    let fileInputAdditionalClasses = "";
     export let directoryStore: IHttpClient<ILoadingContent<IDirectoryView>>;
     export let loading: boolean = false;
 
@@ -118,9 +118,15 @@
         }
     }
 
-    function onDrop(e: any) {
+
+
+    // =========================================================================
+    // on file upload
+    // =========================================================================
+
+    function onDropFileInput(e: any) {
         e.preventDefault();
-        additionalClasses = "";
+        fileInputAdditionalClasses = "";
         if(e?.dataTransfer?.files) {
             eventDispatcher('fileSelected', {
                 target: {
@@ -129,12 +135,12 @@
             });
         }
     }
-    function onDragOver(e: any) {
+    function onDragOverFileInput(e: any) {
         e.preventDefault();
-        additionalClasses = "primary";
+        fileInputAdditionalClasses = "primary";
     }
-    function onDragLeave(e: any) {
-        additionalClasses = "";
+    function onDragLeaveFileInput(e: any) {
+        fileInputAdditionalClasses = "";
     }
 </script>
 
@@ -144,7 +150,13 @@
             {#if $directoryStore?.content?.items?.length && loading === false}
                 {#each $directoryStore?.content?.items as item}
                     {#if item.isDir}
-                        <div class="flex flex-row items-center">
+                        <div class="flex flex-row items-center zropbox-dragable zropbox-dropable"
+                             id="{item.id.toString()}"
+                             draggable="true"
+                             on:drop
+                             on:dragstart
+                             on:dragover
+                             on:dragleave>
                             <!-- Icon -->
                             <IconButton class="material-icons shrink-0" on:click={() => { eventDispatcher("changeDir", item.id); }}>folder</IconButton>
                             <div class="flex flex-row grow cursor-pointer bg-on-hover rounded-md px-2 py-1 mr-2"
@@ -170,7 +182,13 @@
                 {/each}
                 {#each $directoryStore?.content?.items as item}
                     {#if item.isFile}
-                        <div class="flex flex-row items-center grow-0">
+                        <div class="flex flex-row items-center grow-0 zropbox-dragable"
+                             id="{item.id.toString()}"
+                             draggable="true"
+                             on:drop
+                             on:dragstart
+                             on:dragover
+                             on:dragleave>
                             <!-- Icon -->
                             <a class="shrink-0" href="/api/files/{item.id}" target="_blank" title="Filename: {item.name}">
                                 <IconButton class="material-icons">{ getIconBasedOnName(item.name) }</IconButton>
@@ -205,11 +223,11 @@
                 {:else}
                     <div class="flex grow h-60" on:click={() => fileInput.click()}>
                         <div class="flex grow border-2 border-gray-500 border-dashed justify-center items-center cursor-pointer p-2"
-                             on:drop={onDrop}
-                             on:dragover={onDragOver}
-                             on:dragleave={onDragLeave}>
+                             on:drop={onDropFileInput}
+                             on:dragover={onDragOverFileInput}
+                             on:dragleave={onDragLeaveFileInput}>
                             <div>
-                                <Icon class="material-icons {additionalClasses}" style="font-size: 100px"> upload </Icon>
+                                <Icon class="material-icons {fileInputAdditionalClasses}" style="font-size: 100px"> upload </Icon>
                             </div>
                         </div>
                     </div>

@@ -68,11 +68,101 @@
         }
     }
 
+    // =========================================================================
+    // helpers
+    // =========================================================================
+
     // returns true if the element or one of its parents has the id idname
     function hasSomeParentTheId(element, idname) {
         if (element.id === idname) return true;
         return element.parentNode && hasSomeParentTheId(element.parentNode, idname);
     }
+
+    // returns true if the element or one of its parents has the id idname
+    function returnSomeParentWithClass(element, className) {
+        if (!element?.classList) {
+            return null;
+        }
+        if (element.classList.contains(className)) {
+            return element;
+        }
+        if (!element.parentNode) {
+            return null;
+        }
+        return returnSomeParentWithClass(element.parentNode, className);
+    }
+
+    // =========================================================================
+    // on file move
+    // =========================================================================
+
+    function onDragStartFileMove(e: any) {
+        let source = returnSomeParentWithClass(e.srcElement, "zropbox-dragable");
+        if (source) {
+            e.dataTransfer.setData("dragable-id", source.id);
+        }
+    }
+    function onDropFileMove(e: any) {
+        e.preventDefault();
+        const sourceElement = e.dataTransfer.getData("dragable-id");
+        if (sourceElement) {
+            const targetParent = returnSomeParentWithClass(e.target, "zropbox-dropable");
+            if (targetParent) {
+                if (sourceElement !== targetParent?.id) {
+                    targetParent.classList.remove("bg");
+                    let sourceItem = $currentDirectory.content.items.find(i => i.id === parseInt(sourceElement));
+                    let sourceItemIndex = $currentDirectory.content.items.findIndex(i => i.id === parseInt(sourceElement));
+                    if ((sourceItem.isRoot && parseInt(targetParent.id) === 0) || ($currentDirectory.content.currentItemId === parseInt(targetParent.id))) {
+                        // ignore because same folder
+                        return;
+                    }
+                    currentDirectory.update(x => {
+                        x.content.items = x.content.items.filter(i => i.id !== parseInt(sourceElement));
+                        return x;
+                    })
+                    const httpMove = httpClient({});
+                    const data = {
+                        name: sourceItem.name,
+                        parentId: parseInt(targetParent.id),
+                        isPublic: sourceItem.isPublic
+                    };
+                    httpMove.put(`/files/${sourceItem.id}`, data, (response) => {
+                        toastSuccess("File moved");
+                    }, (e) => {
+                        toastError("Error moving file");
+                        currentDirectory.update(x => {
+                            x.content.items.splice(sourceItemIndex, 0, sourceItem);
+                            return x;
+                        });
+                    });
+                }
+            }
+        }
+    }
+    function onDragOverFileMove(e: any) {
+        e.preventDefault();
+        const sourceElement = e.dataTransfer.getData("dragable-id");
+        if (sourceElement) {
+            const targetParent = returnSomeParentWithClass(e.target, "zropbox-dropable");
+            if (targetParent) {
+                if (sourceElement !== targetParent?.id) {
+                    if (targetParent?.classList) {
+                        targetParent.classList.add("bg");
+                    }
+                }
+            }
+        }
+    }
+    function onDragLeaveFileMove(e: any) {
+        const targetParent = returnSomeParentWithClass(e.target, "zropbox-dropable");
+        if (targetParent?.classList) {
+            targetParent.classList.remove("bg");
+        }
+    }
+
+    // =========================================================================
+    // on init
+    // =========================================================================
 
     currentDirectory.get('/directory/0');
 </script>
@@ -95,13 +185,21 @@
         <!-- Hierarchy -->
         <div class="card-container mb-4">
             <Hierarchy on:changeDir={(event) => { changeDirectory(event.detail)}}
-                       on:fileSelected={onFileSelected} />
+                       on:fileSelected={onFileSelected}
+                       on:drop={onDropFileMove}
+                       on:dragstart={onDragStartFileMove}
+                       on:dragover={onDragOverFileMove}
+                       on:dragleave={onDragLeaveFileMove} />
         </div>
 
         <!-- Explorer -->
         <div class="card-container">
             <Explorer on:changeDir={(event) => { changeDirectory(event.detail)}}
                       on:fileSelected={onFileSelected}
+                      on:drop={onDropFileMove}
+                      on:dragstart={onDragStartFileMove}
+                      on:dragover={onDragOverFileMove}
+                      on:dragleave={onDragLeaveFileMove}
                       loading={$currentDirectory?.loading}
                       directoryStore={currentDirectory} />
         </div>

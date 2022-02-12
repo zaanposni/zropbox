@@ -56,22 +56,31 @@
     <Content class="flex flex-col p-2">
         <div class="flex flex-row items-center">
             {#if $currentDirectory?.content?.hierarchy}
-                <IconButton class="material-icons cursor-pointer"
-                    on:click={() => {
-                        eventDispatcher("changeDir", 0);
-                    }}
-                    title="return to root">folder_open</IconButton>
-                <div class="cursor-pointer bg-on-hover rounded-md"
-                    on:click={() => { eventDispatcher("changeDir", 0); }}>
-                    <div class="primary font-medium px-2 py-1">
-                        {$loggedInUser?.content?.name}
+                <div class="flex flex-row items-center rounded-md zropbox-dropable"
+                     id="0"
+                     on:drop
+                     on:dragover
+                     on:dragleave>
+                    <IconButton class="material-icons cursor-pointer"
+                        on:click={() => {
+                            eventDispatcher("changeDir", 0);
+                        }}
+                        title="return to root">folder_open</IconButton>
+                    <div class="cursor-pointer bg-on-hover rounded-md"
+                        on:click={() => { eventDispatcher("changeDir", 0); }}>
+                        <div class="primary font-medium px-2 py-1">
+                            {$loggedInUser?.content?.name}
+                        </div>
                     </div>
                 </div>
                 <span class="font-light px-1">/</span>
                 {#if $currentDirectory?.content?.hierarchy?.length < 3}
                     {#each $currentDirectory?.content?.hierarchy as directory}
-                        <div class="cursor-pointer bg-on-hover rounded-md"
-                            on:click={() => { eventDispatcher("changeDir", directory.id); }}>
+                        <div class="cursor-pointer bg-on-hover rounded-md zropbox-dropable" id="{directory.id.toString()}"
+                            on:click={() => { eventDispatcher("changeDir", directory.id); }}
+                            on:drop
+                            on:dragover
+                            on:dragleave>
                             <div class="px-2 py-1">{directory.name}</div>
                         </div>
                         <span class="font-light px-1">/</span>
@@ -80,8 +89,11 @@
                     <div class="px-2 py-1" title={completePath}>...</div>
                     <span class="font-light px-1">/</span>
                     {#each lastThreeHierarchyElements as directory}
-                        <div class="cursor-pointer bg-on-hover rounded-md"
-                            on:click={() => { eventDispatcher("changeDir", directory.id); }}>
+                        <div class="cursor-pointer bg-on-hover rounded-md zropbox-dropable" id="{directory.id.toString()}"
+                            on:click={() => { eventDispatcher("changeDir", directory.id); }}
+                            on:drop
+                            on:dragover
+                            on:dragleave>
                             <div class="px-2 py-1">{directory.name}</div>
                         </div>
                         <span class="font-light px-1">/</span>
