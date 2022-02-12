@@ -105,12 +105,24 @@ namespace Zropbox.Controllers
             }
 
             CDNEntry entry = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(id);
+
             if (entry.UploadedBy != currentUser && !currentUser.IsAdmin)
             {
                 throw new UnauthorizedException();
             }
 
-            if (dto.ParentId != 0)
+            entry.Name = dto.Name;
+            entry.IsPublic = dto.IsPublic;
+
+            FileRepository fileRepo = FileRepository.CreateDefault(ServiceProvider);
+
+            entry = await fileRepo.EditEntry(entry);
+
+            if (dto.ParentId == 0)
+            {
+                entry = await fileRepo.MoveEntryToRoot(entry);
+            }
+            else
             {
                 CDNEntry parent = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(dto.ParentId);
                 if (parent.UploadedBy != currentUser && !currentUser.IsAdmin)
@@ -122,14 +134,10 @@ namespace Zropbox.Controllers
                     return BadRequest();
                 }
                 entry.Parent = parent;
-            } else {
-                entry.Parent = null;
+                entry = await fileRepo.EditEntry(entry);
             }
 
-            entry.Name = dto.Name;
-            entry.IsPublic = dto.IsPublic;
-
-            return Ok(new DirectoryItemView(await FileRepository.CreateDefault(ServiceProvider).EditEntry(entry)));
+            return Ok(new DirectoryItemView(entry));
         }
     }
 }

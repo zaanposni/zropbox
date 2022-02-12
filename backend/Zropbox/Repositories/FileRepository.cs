@@ -155,6 +155,20 @@ namespace Zropbox.Repositories
             return newEntry;
         }
 
+        public async Task<CDNEntry> MoveEntryToRoot(CDNEntry entry)
+        {
+            if (entry.Parent == null)
+            {
+                return entry;
+            }
+
+            // execute raw sql to avoid EF cascade delete
+            // rage counter: 1
+            await Context.Database.ExecuteSqlRawAsync($"UPDATE CDNEntries SET ParentId = NULL WHERE Id = {entry.Id}");
+
+            return entry;
+        }
+
         public async Task<List<CDNEntry>> ExecuteFuzzySearch(User user, string search)
         {
             List<CDNEntry> entries = await Context.CDNEntries.Include(x => x.Parent).Include(x => x.UploadedBy).AsQueryable().Where(x => x.UploadedBy == user && ! x.IsDir).ToListAsync();
