@@ -49,11 +49,31 @@ namespace Zropbox.Controllers
             if (await repo.CheckLogin(login.Username, login.Password))
             {
                 User user = await repo.GetUser(login.Username);
-                var tokenString = GenerateJSONWebToken(user.Name);
-                response = Ok(new { token = tokenString });
+                response = Ok(new { token = GenerateJSONWebToken(user.Name) });
             }
 
             return response;
+        }
+
+        [Authorize]
+        [HttpPost("impersonate")]
+        public async Task<IActionResult> Impersonate([FromBody] UserLogin login, [FromQuery] string targetUsername)
+        {
+            await ValidateLogin(true);
+
+            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
+
+            if (await repo.CheckLogin(login.Username, login.Password))
+            {
+                User loggedInUser = await repo.GetUser(login.Username);
+                User targetUser = await repo.GetUser(targetUsername);
+                if (loggedInUser == null || !loggedInUser.IsAdmin)
+                {
+                    throw new UnauthorizedException();
+                }
+                return Ok(new { token = GenerateJSONWebToken(targetUser.Name) });
+            }
+            return Unauthorized();
         }
 
         private string GenerateJSONWebToken(string username)
