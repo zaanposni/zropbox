@@ -56,8 +56,8 @@ namespace Zropbox.Controllers
         }
 
         [Authorize]
-        [HttpPost("impersonate")]
-        public async Task<IActionResult> Impersonate([FromBody] UserLogin login, [FromQuery] string targetUsername)
+        [HttpPost("impersonate/{targetUsername}")]
+        public async Task<IActionResult> Impersonate([FromBody] UserLogin login, [FromRoute] string targetUsername)
         {
             await ValidateLogin(true);
 

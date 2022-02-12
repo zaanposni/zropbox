@@ -5,14 +5,17 @@
     import httpClient from "../utils/httpClient";
     import IconButton, { Icon } from "@smui/icon-button";
     import LinearProgress from '@smui/linear-progress';
-    import { loginName } from "../stores/authStore";
+    import { loggedInUser, loginName } from "../stores/authStore";
     import { toastError, toastSuccess } from "../utils/toast";
     import { createUserDialog, createUserDialogReturnFunc, showCreateUserDialog } from "../stores/createUserDialog";
     import Fab from '@smui/fab';
     import { changePasswordDialog, changePasswordDialogReturnFunc, showChangePasswordDialog } from "../stores/changePasswordDialog";
-import { confirmDialogReturnFunc, showConfirmDialog } from "../stores/confirmDialog";
+    import { confirmDialogReturnFunc, showConfirmDialog } from "../stores/confirmDialog";
+    import { confirmLoginDialog, confirmLoginDialogReturnFunc, showConfirmLoginDialog } from "../stores/confirmLoginDialog";
+    import setCookie from "../utils/setCookie";
+    import { useNavigate } from "svelte-navigator";
 
-    let selectedUser: IUser | null = null;
+    const navigate = useNavigate();
     const allUsers = httpClient<ILoadingContent<IUser[]>>({});
 
     function setItemLoading(id: number, loading: boolean) {
@@ -78,61 +81,81 @@ import { confirmDialogReturnFunc, showConfirmDialog } from "../stores/confirmDia
     }
 
     function resetPassword(user: IUser) {
+        function changePassword(e: any) {
+            if (e?.detail?.action === "update") {
+                setItemLoading(user.id, true);
+                let updateEntry = httpClient({});
+                const data = {
+                    username: user.name,
+                    isAdmin: user.isAdmin,
+                    password: $changePasswordDialog
+                };
+                updateEntry.put(`/users/password`, data, () => {
+                    toastSuccess("Successfully updated");
+                    allUsers.update(x => {
+                        let index = x?.content?.findIndex(y => y.id === user.id);
+                        if (index !== null && index !== -1) {
+                            x.content[index].loading = false;
+                        }
+                        return x;
+                    });
+                }, (error) => {
+                    toastError("Failed to update");
+                    setItemLoading(user.id, false);
+                    console.error(error);
+                });
+            }
+        }
         changePasswordDialogReturnFunc.set(changePassword);
         showChangePasswordDialog.set(true);
-        selectedUser = user;
     }
 
     function openNewUserDialog() {
+        function createNewUser(e: any) {
+            if (e?.detail?.action === "create") {
+                const data = {
+                    username: $createUserDialog.name,
+                    password: $createUserDialog.password,
+                    isAdmin: $createUserDialog.isAdmin
+                };
+                const newUser = httpClient({});
+                newUser.post('/users/register', data, (res) => {
+                    toastSuccess("Successfully created");
+                    allUsers.update(x => {
+                        x.content.push(res);
+                        return x;
+                    });
+                }, (error) => {
+                    toastError("Failed to create");
+                    console.error(error);
+                });
+            }
+        }
         createUserDialogReturnFunc.set(createNewUser);
         showCreateUserDialog.set(true);
     }
 
-    function createNewUser(e: any) {
-        if (e?.detail?.action === "create") {
-            const data = {
-                username: $createUserDialog.name,
-                password: $createUserDialog.password,
-                isAdmin: $createUserDialog.isAdmin
-            };
-            const newUser = httpClient({});
-            newUser.post('/users/register', data, (res) => {
-                toastSuccess("Successfully created");
-                allUsers.update(x => {
-                    x.content.push(res);
-                    return x;
+    function impersonate(user: IUser) {
+        function impersonateUser(e: any) {
+            if (e?.detail?.action === "confirm") {
+                const data = {
+                    username: $confirmLoginDialog.name,
+                    password: $confirmLoginDialog.password
+                };
+                const impersonation = httpClient({});
+                impersonation.post(`/auth/impersonate/${user.name}`, data, (res) => {
+                    toastSuccess("Successfully impersonated");
+                    setCookie('zropbox_access_token', res.token, 1);
+                    loggedInUser.get('/auth', () => {
+                        navigate('/home');
+                    });
+                }, () => {
+                    toastError("Failed to impersonate");
                 });
-            }, (error) => {
-                toastError("Failed to create");
-                console.error(error);
-            });
+            }
         }
-    }
-
-    function changePassword(e: any) {
-        if (e?.detail?.action === "update") {
-            setItemLoading(selectedUser.id, true);
-            let updateEntry = httpClient({});
-            const data = {
-                username: selectedUser.name,
-                isAdmin: selectedUser.isAdmin,
-                password: $changePasswordDialog
-            };
-            updateEntry.put(`/users/password`, data, () => {
-                toastSuccess("Successfully updated");
-                allUsers.update(x => {
-                    let index = x?.content?.findIndex(y => y.id === selectedUser.id);
-                    if (index !== null && index !== -1) {
-                        x.content[index].loading = false;
-                    }
-                    return x;
-                });
-            }, (error) => {
-                toastError("Failed to update");
-                setItemLoading(selectedUser.id, false);
-                console.error(error);
-            });
-        }
+        confirmLoginDialogReturnFunc.set(impersonateUser);
+        showConfirmLoginDialog.set(true);
     }
 
     allUsers.get(`/users`);
@@ -165,6 +188,7 @@ import { confirmDialogReturnFunc, showConfirmDialog } from "../stores/confirmDia
                 <div class="grow" />
                 {#if user.name !== $loginName}
                     <div class="flex flex-row shrink-0">
+                        <IconButton class="material-icons" title="login as this user" on:click={() => impersonate(user)}>login</IconButton>
                         <IconButton toggle pressed={user.isAdmin} class="material-icons px-0" on:click={() => changeAdminStatus(user)} readonly={user.loading}>
                             <Icon class="material-icons" title="remove admin permissions" on>security</Icon>
                             <Icon class="material-icons" title="grant admin permissions">person</Icon>

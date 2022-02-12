@@ -17,6 +17,7 @@
     import UserManagement from './pages/UserManagement.svelte';
     import ChangePasswordDialog from './components/ChangePasswordDialog.svelte';
     import NewUserDialog from './components/NewUserDialog.svelte';
+    import ConfirmLoginDialog from './components/ConfirmLoginDialog.svelte';
 
     addMessages("en", en);
     addMessages("en-US", en);
@@ -42,6 +43,7 @@
     <ShareEntryDialog />
     <ChangePasswordDialog />
     <NewUserDialog />
+    <ConfirmLoginDialog />
     <div class="w-full h-full">
         <div class="flex flex-col flex-grow w-full h-full">
             <header>
