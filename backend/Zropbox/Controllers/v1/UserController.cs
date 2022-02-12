@@ -35,14 +35,24 @@ namespace Zropbox.Controllers
         public async Task<IActionResult> Delete([FromRoute] string username)
         {
             await ValidateLogin(true);
+            User currentUser = await GetCurrentUser();
 
-            List<User> users = await UserRepository.CreateDefault(ServiceProvider).GetUsers();
+            UserRepository repo = UserRepository.CreateDefault(ServiceProvider);
+
+            List<User> users = await repo.GetUsers();
             if (users.Count == 1)
             {
                 return BadRequest();
             }
 
-            await UserRepository.CreateDefault(ServiceProvider).DeleteUser(username);
+            User user = await repo.GetUser(username);
+            if (user == currentUser)
+            {
+                return BadRequest();
+            }
+
+            await repo.DeleteUser(username);
+
             return Ok();
         }
 

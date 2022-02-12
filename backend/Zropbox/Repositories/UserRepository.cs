@@ -100,12 +100,14 @@ namespace Zropbox.Repositories
             return isValid;
         }
 
-        public async Task DeleteUser(string username)
+        public async Task DeleteUser(User user)
         {
-            User user = await GetUser(username);
-
             Context.Users.Remove(user);
             await Context.SaveChangesAsync();
+        }
+        public async Task DeleteUser(string username)
+        {
+            await DeleteUser(await GetUser(username));
         }
 
         public async Task<User> UpdatePassword(string username, string newPassword)
