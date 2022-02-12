@@ -164,7 +164,7 @@ namespace Zropbox.Repositories
 
             // execute raw sql to avoid EF cascade delete
             // rage counter: 1
-            await Context.Database.ExecuteSqlRawAsync($"UPDATE CDNEntries SET ParentId = NULL WHERE Id = {entry.Id}");
+            await Context.Database.ExecuteSqlRawAsync($"UPDATE {nameof(Context.CDNEntries)} SET ParentId = NULL WHERE Id = {entry.Id}");
 
             return entry;
         }
