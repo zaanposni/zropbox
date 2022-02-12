@@ -127,7 +127,11 @@
                         isPublic: sourceItem.isPublic
                     };
                     httpMove.put(`/files/${sourceItem.id}`, data, (response) => {
-                        toastSuccess("File moved");
+                        if (sourceItem.isDir) {
+                            toastSuccess("Directory moved");
+                        } else {
+                            toastSuccess("File moved");
+                        }
                     }, (e) => {
                         toastError("Error moving file");
                         currentDirectory.update(x => {
