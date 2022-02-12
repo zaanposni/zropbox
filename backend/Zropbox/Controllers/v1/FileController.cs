@@ -110,6 +110,22 @@ namespace Zropbox.Controllers
                 throw new UnauthorizedException();
             }
 
+            if (dto.ParentId != 0)
+            {
+                CDNEntry parent = await DirectoryRepository.CreateDefault(ServiceProvider).GetEntry(dto.ParentId);
+                if (parent.UploadedBy != currentUser && !currentUser.IsAdmin)
+                {
+                    throw new UnauthorizedException();
+                }
+                if (!parent.IsDir)
+                {
+                    return BadRequest();
+                }
+                entry.Parent = parent;
+            } else {
+                entry.Parent = null;
+            }
+
             entry.Name = dto.Name;
             entry.IsPublic = dto.IsPublic;
 

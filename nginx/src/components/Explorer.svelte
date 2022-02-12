@@ -64,6 +64,7 @@
         let updateEntry = httpClient({});
         const data = {
             name: item.name,
+            parentId: $directoryStore.content.currentItemId,
             isPublic: !item.isPublic
         };
         updateEntry.put(`/files/${item.id}`, data, () => {

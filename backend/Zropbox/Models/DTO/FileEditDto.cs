@@ -9,5 +9,7 @@ namespace Zropbox.Models
         public string Name { get; set; }
         [Required]
         public bool IsPublic { get; set; }
+        [Required]
+        public int ParentId { get; set; }
     }
 }
