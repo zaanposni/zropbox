@@ -21,8 +21,8 @@ ENV_FILE = {
 default_sql = {
     "MYSQL_HOST": "db",
     "MYSQL_PORT": "3306",
-    "MYSQL_USER": "root",
-    "MYSQL_PASSWORD": "root",
+    "MYSQL_USER": "zropbox",
+    "MYSQL_PASSWORD": "zropbox",
     "MYSQL_DATABASE": "zropbox",
     "MYSQL_ROOT_PASSWORD": "root"
 }
@@ -39,6 +39,7 @@ if default:
     ENV_FILE["LOGIN_DURATION"] = "48"
     console.log("Setting default login duration: [red]48[/red] hours.")
 else:
+    console.log(":exclamation_mark: Only change these if you know what you are doing.")
     ENV_FILE["MYSQL_HOST"] = Prompt.ask(":question_mark: Enter the hostname of the mysql server.", default=default_sql["MYSQL_HOST"])
     ENV_FILE["MYSQL_PORT"] = Prompt.ask(":question_mark: Enter the port of the mysql server.", default=default_sql["MYSQL_PORT"])
     ENV_FILE["MYSQL_USER"] = Prompt.ask(":question_mark: Enter the username of the mysql server.", default=default_sql["MYSQL_USER"])
