@@ -13,9 +13,8 @@
   $error: #CF6679
 );
 
-html,
 body {
-  background-color: theme.$background;
+  background: url('/img/prism.png');
   color: theme.$on-primary;
 }
 
