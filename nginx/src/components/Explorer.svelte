@@ -222,7 +222,7 @@
                     <LinearProgress indeterminate />
                 {:else}
                     <div class="flex grow h-60" on:click={() => fileInput.click()}>
-                        <div class="flex grow border-2 border-gray-500 border-dashed justify-center items-center cursor-pointer p-2"
+                        <div class="flex grow border-2 border-gray-500 border-dashed justify-center items-center primary-on-hover cursor-pointer p-2"
                              on:drop={onDropFileInput}
                              on:dragover={onDragOverFileInput}
                              on:dragleave={onDragLeaveFileInput}>

@@ -25,6 +25,9 @@ a {
 .primary {
   color: theme.$primary;
 }
+.primary-on-hover:hover {
+  color: theme.$primary;
+}
 
 .secondary {
   color: theme.$secondary;
