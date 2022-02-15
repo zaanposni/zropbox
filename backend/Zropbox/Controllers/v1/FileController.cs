@@ -42,6 +42,8 @@ namespace Zropbox.Controllers
         }
 
         [HttpPost("{id}")]
+        [DisableRequestSizeLimit]
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
         [Authorize]
         public async Task<IActionResult> UploadedFile([FromRoute] int id, [FromForm] FileUpload file)
         {
