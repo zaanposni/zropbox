@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
 
 from ward import test
-from ward.config import Config
-from ward.hooks import hook
 from dateutil.parser import parse as dateparse
 
 from api import post, get, put, delete, upload
 from constants import USER, PASSWORD
+
 
 @test("FilesApi should allow upload of all file sizes - 0 bytes", tags=["authorized", "upload", "files"])
 def _():
