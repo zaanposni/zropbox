@@ -1,4 +1,4 @@
-name: DockerCompose
+name: Softwaretests
 on:
   push:
     branches: [ master ]
@@ -12,7 +12,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the stack
       run: |
-        docker-compose -f docker-compose-dev.yml --env-file ./tests/test.env up -d
+        docker-compose -f docker-compose-dev.yml --env-file ./backend/tests/test.env up -d
+
     - name: Run tests
       run: |
         cd tests
