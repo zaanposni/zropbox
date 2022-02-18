@@ -1,0 +1,23 @@
+name: DockerCompose
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  IntegrationTest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the stack
+      run: |
+        docker-compose -f docker-compose-dev.yml --env-file ./tests/.env up -d
+    - name: Run tests
+      run: |
+        cd tests
+        sleep 60s
+        python3 -m pip install -r requirements.txt
+        cd src
+        python3 setup.py
+        python3 -m ward
