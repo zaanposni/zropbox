@@ -92,13 +92,19 @@ using (var scope = app.Services.CreateScope())
             password = Environment.GetEnvironmentVariable("PREF_INIT_PASSWORD");
         }
 
-        await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser("admin", password, true);
+        string username = "admin";
+        if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PREF_INIT_USERNAME")))
+        {
+            username = Environment.GetEnvironmentVariable("PREF_INIT_USERNAME");
+        }
 
-        Console.WriteLine($"==================================================================================");
+        await UserRepository.CreateDefault(scope.ServiceProvider).RegisterUser(username, password, true);
+
+        Console.WriteLine($"====================================================================================");
         Console.WriteLine();
-        Console.WriteLine($"No user found in database. Created 'admin' account with password '{password}'.");
+        Console.WriteLine($"No user found in database. Created '{username}' account with password: '{password}'.");
         Console.WriteLine();
-        Console.WriteLine($"==================================================================================");
+        Console.WriteLine($"====================================================================================");
     }
     await context.Database.CloseConnectionAsync();
 }

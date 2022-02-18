@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the stack
       run: |
-        docker-compose -f docker-compose-dev.yml --env-file ./tests/.env up -d
+        docker-compose -f docker-compose-dev.yml --env-file ./tests/test.env up -d
     - name: Run tests
       run: |
         cd tests

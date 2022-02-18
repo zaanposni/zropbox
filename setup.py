@@ -53,10 +53,14 @@ else:
 ENV_FILE["JWT_KEY"] = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(512))
 console.log("Generating secret key. This is used to sign the jwt (login) tokens.\nIt is recommended to change this key every week.")
 
-init_pw = Prompt.ask(":question_mark: Enter the password for the initial admin user.\n   If you leave this empty a random one will be generated upon startup and can be found in the docker logs")
-if init_pw:
-    ENV_FILE["PREF_INIT_PASSWORD"] = init_pw
-    console.log(f"You can use this password and the user [red]admin[/red] to login to the website.")
+init_user = Prompt.ask(":question_mark: Enter the initial user's name.", default="admin")
+init_pass = Prompt.ask(":question_mark: Enter the initial user's password", password=True)
+if init_user and init_pass:
+    ENV_FILE["PREF_INIT_USERNAME"] = init_user
+    ENV_FILE["PREF_INIT_PASSWORD"] = init_pass
+    console.log(f"You can use this password and the user [red]{init_user}[/red] to login to the website.")
+else:
+    console.log(":exclamation_mark: One of your inputs was empty. Default credentials will be generated upon startup. You will find those in the docker logs.")
 
 env_string = ""
 for key, value in ENV_FILE.items():
