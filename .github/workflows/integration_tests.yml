@@ -16,7 +16,7 @@ jobs:
 
     - name: Run tests
       run: |
-        cd tests
+        cd backend/tests
         sleep 60s
         python3 -m pip install -r requirements.txt
         cd src
