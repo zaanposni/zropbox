@@ -14,4 +14,4 @@ def _():
 @test("AuthApi returns 401 when not logged in", tags=["unauthorized", "auth"])
 def _():
     response = get("auth", authorized=False)
-    assert response.status_code == 401
+    assert response.status_code == 402
